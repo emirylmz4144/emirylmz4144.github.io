@@ -171,21 +171,69 @@ function normalizeForModeration(value) {
 		.toLocaleLowerCase('tr-TR')
 		.normalize('NFKD')
 		.replace(/\p{M}/gu, '')
+		.replace(/[а-яё]/gu, (character) => ({
+			'а': 'a', 'б': 'b', 'в': 'v', 'г': 'g', 'д': 'd', 'е': 'e', 'ё': 'e', 'ж': 'zh', 'з': 'z',
+			'и': 'i', 'й': 'i', 'к': 'k', 'л': 'l', 'м': 'm', 'н': 'n', 'о': 'o', 'п': 'p', 'р': 'r',
+			'с': 's', 'т': 't', 'у': 'u', 'ф': 'f', 'х': 'h', 'ц': 'c', 'ч': 'ch', 'ш': 'sh', 'щ': 'sh',
+			'ъ': '', 'ы': 'i', 'ь': '', 'э': 'e', 'ю': 'yu', 'я': 'ya',
+		}[character] ?? character))
 		.replace(/ı/gu, 'i')
+		.replace(/[0134578@$!]/gu, (character) => ({
+			'0': 'o', '1': 'i', '3': 'e', '4': 'a', '5': 's', '7': 't', '8': 'b', '@': 'a', '$': 's', '!': 'i',
+		}[character] ?? character))
+		.replace(/([a-z0-9])[^a-z0-9\s]+(?=[a-z0-9])/gu, '$1')
 		.replace(/[^a-z0-9\s]/gu, ' ')
+		.replace(/([a-z0-9])\1+/gu, '$1')
 		.replace(/\s+/gu, ' ')
 		.trim();
 }
 
 const blockedWords = new Set([
-	'amk', 'aq', 'amina', 'aminakoyim', 'anan', 'ananin', 'anasini', 'siker', 'sikerim', 'sikeyim', 'sikim', 'siktir', 'siktirdim', 'siktirdin', 'siktim',
-	'oruspu', 'orospu', 'pic', 'yarrak', 'yarak', 'kahpe', 'ibne', 'fuck', 'fucking', 'motherfucker',
-	'shit', 'bullshit', 'bitch', 'asshole', 'bastard', 'cunt',
+	'amk', 'aq', 'oc', 'sik', 'amina', 'amini', 'aminakoyim', 'aminakoyayim', 'amkoyim', 'amkoyayim',
+	'aminasikeyim', 'aminiyim', 'anan', 'anani', 'ananin', 'anasini', 'ananisikeyim', 'ananavradini',
+	'siker', 'sikerim', 'sikeyim', 'sikim', 'siktir', 'siktirdim', 'siktirdin', 'siktim', 'siktiniz', 'siktik', 'sikiyor',
+	'sikiyorum', 'sikmeye', 'sikmek', 'siksen', 'siksin', 'sktir', 'fck', 'fuk', 'fuq', 'sht', 'btch', 'dck',
+	'pssy', 'orosbu', 'oruspu', 'orospu', 'pic', 'yarrak', 'yarram', 'yarrag', 'yarragi', 'yarragini', 'yarak',
+	'kahpe', 'ibne', 'pust', 'amcik', 'amcigi', 'got', 'gotunu', 'gotune',
+	'gotunden', 'gotun', 'gotum', 'gotveren', 'gotlek', 'gotelek', 'kaltak', 'surtuk', 'fahise',
+	'mal', 'malsin', 'hiyar', 'hiyarsin', 'ahmak', 'gavat', 'bok', 'boktan', 'itogluit', 'pezevenk', 'yavsak',
+	'fuck', 'fucking', 'fucked', 'fucker', 'motherfucker', 'cocksucker', 'shit', 'bullshit', 'bitch', 'asshole', 'bastard',
+	'cunt', 'cock', 'dick', 'dickhead', 'pussy', 'pussies', 'whore', 'slut', 'faggot', 'retard', 'idiot', 'stupid', 'moron',
+	'dumbass', 'jackass', 'twat', 'wanker', 'prick', 'piss', 'puta', 'mierda', 'cabron', 'pendejo',
 ]);
 
+const blockedWordRoots = [
+	'serefsiz', 'salak', 'aptal', 'gerizekali', 'gerizekafali', 'beyinsiz', 'kafasiz', 'ahmak', 'haysiyetsiz',
+	'namussuz', 'pislik', 'yavsak', 'dangalak', 'pezevenk', 'orospucocugu', 'orospu', 'oruspu', 'orosbu', 'kahpe',
+	'ibne', 'pust', 'sikik', 'siktir', 'siktim', 'siker', 'sikerim', 'sikeyim', 'sikt', 'sikm', 'sike', 'siks', 'sktir',
+	'yarrak', 'yarram', 'yarrag', 'yarak', 'amcik', 'amcigi', 'amina', 'amini', 'gotunu', 'gotune', 'gotunden', 'gotun', 'gotum',
+	'gotveren', 'gotlek', 'gotelek', 'kaltak', 'surtuk', 'fahise',
+	'gavat', 'boktan', 'fuck', 'shit', 'bitch', 'asshole', 'bastard', 'cunt', 'faggot', 'retard', 'motherfucker',
+	'bullshit', 'cocksucker', 'fucker', 'dickhead', 'idiot', 'stupid', 'moron', 'dumbass', 'jackass',
+	'whore', 'slut', 'piss', 'twat', 'wanker', 'prick', 'pendejo', 'cabron',
+];
+
 function containsProfanity(question) {
-	const words = question.split(/\s+/u).map((part) => normalizeForModeration(part).replace(/\s/gu, ''));
-	return words.some((word) => blockedWords.has(word));
+	const parts = normalizeForModeration(question).split(' ').filter(Boolean);
+	const words = [];
+	for (let index = 0; index < parts.length;) {
+		if (parts[index].length !== 1) {
+			words.push(parts[index]);
+			index += 1;
+			continue;
+		}
+
+		let end = index;
+		while (end < parts.length && parts[end].length === 1) end += 1;
+		const run = parts.slice(index, end);
+		if (run.length > 1) words.push(run.join(''));
+		else words.push(run[0]);
+		index = end;
+	}
+
+	return words.some((word) => blockedWords.has(word)
+		|| blockedWordRoots.some((root) => word.startsWith(root)))
+		|| words.some((word) => word.length > 1 && blockedWordRoots.some((root) => word.includes(root)));
 }
 
 function looksLikeSpam(question) {
@@ -361,9 +409,16 @@ async function requestVerificationCode(request, response) {
 		throw new HttpError(429, 'Çok fazla kod isteği gönderildi. Bir saat sonra tekrar dene.');
 	}
 
+	if (containsProfanity(question)) {
+		throw new HttpError(422, 'Lütfen saygılı olun. Küfür, argo veya hakaret içeren sorular gönderilemez.');
+	}
+	if (looksLikeSpam(question)) {
+		throw new HttpError(422, 'Soru spam içerik olarak algılandığı için gönderilemedi.');
+	}
+
 	const flagged = await moderateQuestion(question);
-	if (flagged || containsProfanity(question) || looksLikeSpam(question)) {
-		throw new HttpError(422, 'Sorun uygunsuz dil veya spam içerdiği için gönderilemedi.');
+	if (flagged) {
+		throw new HttpError(422, 'Lütfen saygılı olun. Soru uygunsuz içerik içerdiği için gönderilemedi.');
 	}
 
 	removeExpiredChallenges();

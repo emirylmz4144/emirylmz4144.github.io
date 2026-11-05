@@ -7,6 +7,25 @@
 	const questionStatus = document.querySelector("#question-status");
 	let challengeId = "";
 
+	if ("IntersectionObserver" in window && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+		const revealTargets = document.querySelectorAll(
+			".about-layout, .expertise-card, .education-panel, .contact-intro, .question-card",
+		);
+		const revealObserver = new IntersectionObserver((entries, observer) => {
+			entries.forEach((entry) => {
+				if (entry.isIntersecting) {
+					entry.target.classList.add("is-visible");
+					observer.unobserve(entry.target);
+				}
+			});
+		}, { threshold: 0.14, rootMargin: "0px 0px -28px 0px" });
+
+		revealTargets.forEach((target) => {
+			target.classList.add("reveal-on-scroll");
+			revealObserver.observe(target);
+		});
+	}
+
 	if (menuButton && navigation) {
 		const closeMenu = () => {
 			menuButton.setAttribute("aria-expanded", "false");
