@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 150" role="img" aria-labelledby="title">
+  <title>Data science illustration</title>
+  <rect x="7" y="7" width="206" height="136" rx="24" fill="#f2f2df"/>
+  <path d="M37 112V38m0 74h143" fill="none" stroke="#a7aa85" stroke-linecap="round" stroke-width="2.5"/>
+  <path d="M55 98V78h18v20zm30 0V61h18v37zm30 0V44h18v54z" fill="#c8ed73"/>
+  <path d="m57 67 33-18 29 9 31-24" fill="none" stroke="#526be8" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"/>
+  <circle cx="57" cy="67" r="4" fill="#526be8"/><circle cx="90" cy="49" r="4" fill="#526be8"/><circle cx="119" cy="58" r="4" fill="#526be8"/><circle cx="150" cy="34" r="4" fill="#526be8"/>
+  <circle cx="174" cy="37" r="18" fill="#fff" stroke="#526be8" stroke-width="3"/><path d="m187 50 11 11" stroke="#526be8" stroke-linecap="round" stroke-width="5"/>
+</svg>

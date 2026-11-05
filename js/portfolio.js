@@ -45,8 +45,8 @@
 	};
 	const requestButton = questionForm.querySelector("button[type='submit']");
 	const serverUnavailableMessage = location.protocol === "file:"
-		? "Bu sayfa dosya olarak açılmış. Soru formu için proje klasöründe `npm start` çalıştırıp http://localhost:3000 adresini aç."
-		: "Soru formu sunucusuna ulaşılamadı. Projeyi `npm start` ile çalıştırıp http://localhost:3000 adresinden aç.";
+		? "Soru formu şu anda kullanılamıyor. Siteyi sunucu üzerinden açtığında formu kullanabilirsin."
+		: "Soru formu şu anda kullanılamıyor. Lütfen daha sonra tekrar dene.";
 
 	const setBusy = (button, busy, busyText) => {
 		if (!button.dataset.idleText) button.dataset.idleText = button.firstChild.textContent.trim();
@@ -93,7 +93,7 @@
 				return;
 			}
 			if (!status.configured) {
-				message("Soru formu sunucusu açık ancak e-posta ve yapay zekâ servisleri yapılandırılmamış. `.env` ayarlarını tamamla.", "error");
+				message("Soru formu şu anda kullanılamıyor. Lütfen daha sonra tekrar dene.", "error");
 				return;
 			}
 			requestButton.disabled = false;

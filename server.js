@@ -462,7 +462,7 @@ async function serveStatic(request, response, urlPath) {
 	const extension = path.extname(filePath).toLowerCase();
 	response.writeHead(200, {
 		'Content-Type': contentTypes[extension] || 'application/octet-stream',
-		'Cache-Control': extension === '.html' ? 'no-cache' : 'public, max-age=3600',
+		'Cache-Control': ['.html', '.css', '.js'].includes(extension) ? 'no-cache' : 'public, max-age=3600',
 		'Content-Length': file.length,
 	});
 	response.end(request.method === 'HEAD' ? undefined : file);

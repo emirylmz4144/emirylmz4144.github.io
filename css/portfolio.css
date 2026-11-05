@@ -453,16 +453,10 @@ button:focus-visible {
 	letter-spacing: -0.3px;
 }
 
-.tech-item {
-	display: inline-flex;
-	align-items: center;
-	gap: 8px;
-}
-
-.tech-item img {
-	width: 22px;
-	height: 22px;
-	object-fit: contain;
+.tech-list i {
+	color: #9ca493;
+	font-size: 10px;
+	font-style: normal;
 }
 
 .section-space {
@@ -599,6 +593,7 @@ button:focus-visible {
 
 .card-top {
 	display: flex;
+	min-height: 103px;
 	align-items: center;
 	justify-content: space-between;
 }
@@ -611,33 +606,15 @@ button:focus-visible {
 	letter-spacing: 1px;
 }
 
-.card-logos {
-	display: flex;
-	min-height: 48px;
-	align-items: center;
-	gap: 8px;
-}
-
-.card-logos img {
-	width: 44px;
-	height: 44px;
-	padding: 7px;
-	border: 1px solid rgba(32, 36, 33, 0.06);
-	border-radius: 13px;
-	background: #fff;
+.card-illustration {
+	width: 145px;
+	height: 100px;
+	border-radius: 16px;
 	object-fit: contain;
 }
 
-.card-data .card-logos img {
-	background: #f5f7ff;
-}
-
-.card-web .card-logos img {
-	background: #fff6f7;
-}
-
 .expertise-card h3 {
-	margin: 25px 0 9px;
+	margin: 17px 0 9px;
 	font-family: var(--display);
 	font-size: 21px;
 	font-weight: 700;
@@ -686,16 +663,16 @@ button:focus-visible {
 }
 
 .education-mark {
-	display: grid;
-	width: 74px;
-	height: 74px;
-	flex: 0 0 74px;
-	place-items: center;
-	border-radius: 50%;
-	background: var(--green);
-	font-family: var(--display);
-	font-size: 31px;
-	font-weight: 800;
+	width: 172px;
+	height: 96px;
+	flex: 0 0 172px;
+}
+
+.education-mark img {
+	display: block;
+	width: 100%;
+	height: 100%;
+	object-fit: contain;
 }
 
 .education-copy {
@@ -790,17 +767,28 @@ button:focus-visible {
 	color: var(--blue);
 }
 
-.social-icon {
+.social-icon,
+.social-logo {
 	display: grid;
 	width: 34px;
 	height: 34px;
+	flex: 0 0 34px;
 	place-items: center;
-	border-radius: 50%;
-	background: #f1e9e3;
-	color: #aa654d;
 	font-family: var(--display);
 	font-size: 12px;
 	font-weight: 800;
+}
+
+.social-icon {
+	border-radius: 50%;
+	background: #f1e9e3;
+	color: #aa654d;
+}
+
+.social-logo {
+	display: block;
+	border-radius: 9px;
+	object-fit: contain;
 }
 
 .social-icon-linkedin {
@@ -1335,9 +1323,8 @@ button:focus-visible {
 		font-size: 11px;
 	}
 
-	.tech-item img {
-		width: 18px;
-		height: 18px;
+	.tech-list i {
+		font-size: 8px;
 	}
 
 	.section-space {
@@ -1432,10 +1419,9 @@ button:focus-visible {
 	}
 
 	.education-mark {
-		width: 56px;
-		height: 56px;
-		flex-basis: 56px;
-		font-size: 25px;
+		width: 88px;
+		height: 52px;
+		flex-basis: 88px;
 	}
 
 	.education-copy {
