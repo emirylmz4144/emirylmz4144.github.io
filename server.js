@@ -273,10 +273,26 @@ async function sendEmail({ templateId, templateParams }) {
 			}),
 			signal: AbortSignal.timeout(12000),
 		});
-	} catch {
+	} catch (error) {
+		const errorName = error instanceof Error ? error.name : 'Error';
+		const errorMessage = error instanceof Error ? error.message : 'request failed';
+		console.error(`[EmailJS] Network request failed: ${errorName}: ${errorMessage}`);
 		throw new HttpError(502, 'E-posta gönderilemedi. Biraz sonra tekrar dene.');
 	}
 	if (!response.ok) {
+		let detail = '';
+		try {
+			detail = await response.text();
+		} catch {
+			detail = 'response body unavailable';
+		}
+		detail = detail
+			.replace(/[\r\n\t]+/gu, ' ')
+			.replace(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/giu, '[email]');
+		for (const secret of [EMAILJS_PRIVATE_KEY, EMAILJS_PUBLIC_KEY]) {
+			if (secret) detail = detail.split(secret).join('[redacted]');
+		}
+		console.error(`[EmailJS] HTTP ${response.status}: ${detail.slice(0, 300) || 'empty response'}`);
 		throw new HttpError(502, 'E-posta gönderilemedi. Biraz sonra tekrar dene.');
 	}
 }
