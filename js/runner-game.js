@@ -31,6 +31,8 @@
 		spawnIn: 0.9,
 		jumpHeight: 0,
 		jumpVelocity: 0,
+		captured: false,
+		captureProgress: 0,
 		obstacles: [],
 		groundShift: 0,
 	};
@@ -116,10 +118,11 @@
 		}
 	}
 
-	function drawGirl(x, phase, dressColor, time) {
-		const step = Math.sin(time / 78 + phase);
-		const bob = Math.max(0, Math.sin(time / 78 + phase)) * 2;
-		const headY = groundY - 48 + bob;
+	function drawGirl(x, phase, dressColor, time, kissing = false) {
+		const step = kissing ? 0 : Math.sin(time / 78 + phase);
+		const bob = kissing ? 0 : Math.max(0, Math.sin(time / 78 + phase)) * 2;
+		const headX = x + (kissing ? (x < playerX ? 7 : -7) : 0);
+		const headY = groundY - (kissing ? 55 : 48) + bob;
 
 		context.save();
 		context.lineCap = "round";
@@ -152,27 +155,27 @@
 
 		context.fillStyle = "#795348";
 		context.beginPath();
-		context.ellipse(x, headY, 9, 10, 0, 0, Math.PI * 2);
+		context.ellipse(headX, headY, 9, 10, 0, 0, Math.PI * 2);
 		context.fill();
 		context.fillStyle = "#edc7ad";
 		context.beginPath();
-		context.arc(x + 1, headY + 1, 6.5, 0, Math.PI * 2);
+		context.arc(headX + (kissing ? (x < playerX ? 1 : -1) : 1), headY + 1, 6.5, 0, Math.PI * 2);
 		context.fill();
 		context.fillStyle = "#795348";
 		context.beginPath();
-		context.arc(x - 1, headY - 5, 8, Math.PI, Math.PI * 2);
+		context.arc(headX - 1, headY - 5, 8, Math.PI, Math.PI * 2);
 		context.fill();
 		context.beginPath();
-		context.arc(x + 7, headY - 3, 3, 0, Math.PI * 2);
+		context.arc(headX + 7, headY - 3, 3, 0, Math.PI * 2);
 		context.fill();
 
-		drawHeart(x + Math.sin(time / 210 + phase) * 3, headY - 25 - Math.sin(time / 180 + phase) * 3, 13, 0.86);
+		drawHeart(headX + Math.sin(time / 210 + phase) * 3, headY - 25 - Math.sin(time / 180 + phase) * 3, 13, 0.86);
 		context.restore();
 	}
 
 	function drawPlayer(time) {
 		const bottom = groundY - game.jumpHeight;
-		const step = game.jumpHeight > 2 ? 0 : Math.sin(time / 55) * 8;
+		const step = game.captured || game.jumpHeight > 2 ? 0 : Math.sin(time / 55) * 8;
 		const shadowScale = Math.max(0.45, 1 - game.jumpHeight / 120);
 
 		context.fillStyle = `rgba(63, 78, 57, ${0.15 * shadowScale})`;
@@ -190,8 +193,19 @@
 		context.lineTo(playerX + 8 - step, bottom - 3);
 		context.stroke();
 
+		context.fillStyle = "#edc7ad";
+		roundedRect(playerX - 5, bottom - 49, 10, 14, 4);
+		context.fill();
+
 		context.fillStyle = "#5368d5";
-		roundedRect(playerX - 10, bottom - 39, 20, 25, 7);
+		roundedRect(playerX - 12, bottom - 41, 24, 28, 8);
+		context.fill();
+		context.fillStyle = "#8290e6";
+		context.beginPath();
+		context.moveTo(playerX - 7, bottom - 40);
+		context.lineTo(playerX, bottom - 34);
+		context.lineTo(playerX + 7, bottom - 40);
+		context.closePath();
 		context.fill();
 
 		context.strokeStyle = "#f0c9ad";
@@ -203,26 +217,37 @@
 		context.lineTo(playerX + 14 + step * 0.35, bottom - 25);
 		context.stroke();
 
-		const headRadius = 17;
-		const headY = bottom - 56;
+		const headRadiusX = 18;
+		const headRadiusY = 22;
+		const headY = bottom - 62;
+		context.save();
+		context.shadowColor = "rgba(47, 47, 52, 0.2)";
+		context.shadowBlur = 5;
+		context.fillStyle = "#664e49";
+		context.beginPath();
+		context.ellipse(playerX, headY, headRadiusX + 1, headRadiusY + 1, 0, 0, Math.PI * 2);
+		context.fill();
+		context.restore();
+
 		context.save();
 		context.beginPath();
-		context.arc(playerX, headY, headRadius, 0, Math.PI * 2);
+		context.ellipse(playerX, headY, headRadiusX, headRadiusY, 0, 0, Math.PI * 2);
 		context.clip();
 		if (playerFace.complete && playerFace.naturalWidth > 0) {
-		const sourceSize = Math.min(playerFace.naturalWidth, playerFace.naturalHeight) * 0.68;
-			const sourceX = (playerFace.naturalWidth - sourceSize) * 0.5;
-		const sourceY = playerFace.naturalHeight * 0.13;
-			context.drawImage(playerFace, sourceX, sourceY, sourceSize, sourceSize, playerX - headRadius, headY - headRadius, headRadius * 2, headRadius * 2);
+			const sourceWidth = Math.min(playerFace.naturalWidth, playerFace.naturalHeight) * 0.64;
+			const sourceHeight = Math.min(playerFace.naturalWidth, playerFace.naturalHeight) * 0.78;
+			const sourceX = (playerFace.naturalWidth - sourceWidth) * 0.5;
+			const sourceY = playerFace.naturalHeight * 0.04;
+			context.drawImage(playerFace, sourceX, sourceY, sourceWidth, sourceHeight, playerX - headRadiusX, headY - headRadiusY, headRadiusX * 2, headRadiusY * 2);
 		} else {
 			context.fillStyle = "#edc7ad";
-			context.fillRect(playerX - headRadius, headY - headRadius, headRadius * 2, headRadius * 2);
+			context.fillRect(playerX - headRadiusX, headY - headRadiusY, headRadiusX * 2, headRadiusY * 2);
 		}
 		context.restore();
-		context.strokeStyle = "#fff";
-		context.lineWidth = 3;
+		context.strokeStyle = "rgba(69, 53, 48, 0.38)";
+		context.lineWidth = 1.2;
 		context.beginPath();
-		context.arc(playerX, headY, headRadius, 0, Math.PI * 2);
+		context.ellipse(playerX, headY, headRadiusX, headRadiusY, 0, 0, Math.PI * 2);
 		context.stroke();
 	}
 
@@ -245,11 +270,41 @@
 	}
 
 	function drawScene(time = 0) {
+		const progress = game.captured ? Math.min(1, game.captureProgress) : 0;
+		const ease = progress * progress * (3 - 2 * progress);
+		const cameraScale = 1 + ease * 1.38;
+		const focusX = width / 2 + (playerX - width / 2) * ease;
+		const focusY = height / 2 + (groundY - 62 - height / 2) * ease;
+		const leftGirlX = playerX - 91 + 67 * ease;
+		const rightGirlX = playerX - 51 + 76 * ease;
+
+		context.save();
+		context.translate(width / 2, height / 2);
+		context.scale(cameraScale, cameraScale);
+		context.translate(-focusX, -focusY);
 		drawBackground(time);
-		drawGirl(playerX - 91, 1.8, "#d997a7", time);
-		drawGirl(playerX - 51, 0.3, "#a9a2d5", time);
-		game.obstacles.forEach(drawObstacle);
-		drawPlayer(time);
+		if (progress > 0) {
+			drawPlayer(time);
+			drawGirl(leftGirlX, 1.8, "#d997a7", time, progress > 0.72);
+			drawGirl(rightGirlX, 0.3, "#a9a2d5", time, progress > 0.72);
+			game.obstacles.forEach(drawObstacle);
+			if (progress > 0.78) {
+				context.save();
+				context.globalAlpha = Math.min(1, (progress - 0.78) * 4.5);
+				context.font = '15px "Segoe UI Emoji", sans-serif';
+				context.textAlign = "center";
+				context.textBaseline = "middle";
+				context.fillText("💋", playerX - 18, groundY - 62);
+				context.fillText("💋", playerX + 18, groundY - 62);
+				context.restore();
+			}
+		} else {
+			drawGirl(leftGirlX, 1.8, "#d997a7", time);
+			drawGirl(rightGirlX, 0.3, "#a9a2d5", time);
+			game.obstacles.forEach(drawObstacle);
+			drawPlayer(time);
+		}
+		context.restore();
 	}
 
 	function updateScore() {
@@ -263,9 +318,18 @@
 
 	function finishGame() {
 		stopGame();
-		message.textContent = `Yakalandın! ${Math.floor(game.distance)} metre kaçtın. Bir tur daha?`;
-		startButton.innerHTML = 'Tekrar dene <span aria-hidden="true">↻</span>';
+		message.textContent = `Yakalandın! ${Math.floor(game.distance)} metre kaçtın. Öpücük yağmuru başladı! 💋💕`;
+		startButton.innerHTML = 'Bir daha kaç <span aria-hidden="true">↻</span>';
 		startScreen.hidden = false;
+	}
+
+	function beginCapture() {
+		game.captured = true;
+		game.captureProgress = 0;
+		game.jumpHeight = 0;
+		game.jumpVelocity = 0;
+		game.obstacles = [];
+		game.spawnIn = Infinity;
 	}
 
 	function startGame() {
@@ -278,6 +342,8 @@
 		game.spawnIn = 0.8;
 		game.jumpHeight = 0;
 		game.jumpVelocity = 0;
+		game.captured = false;
+		game.captureProgress = 0;
 		game.obstacles = [];
 		game.groundShift = 0;
 		updateScore();
@@ -292,6 +358,12 @@
 
 	function update(delta) {
 		game.elapsed += delta;
+		if (game.captured) {
+			game.captureProgress = Math.min(1, game.captureProgress + delta / 1.75);
+			if (game.captureProgress >= 1) finishGame();
+			return;
+		}
+
 		game.distance += delta * (game.speed / 55);
 		game.speed = Math.min(430, 282 + game.distance * 1.25);
 		game.groundShift = (game.groundShift + game.speed * delta) % 47;
@@ -327,7 +399,7 @@
 			&& obstacle.x + obstacle.width > playerX - 11
 			&& game.jumpHeight < obstacle.height - 2
 		));
-		if (collided) finishGame();
+		if (collided) beginCapture();
 		updateScore();
 	}
 
@@ -355,11 +427,13 @@
 		toggle.setAttribute("aria-expanded", "false");
 		toggle.setAttribute("aria-label", "Oyun oyna");
 		startScreen.hidden = false;
-		message.textContent = "Engellerden kaç, kalpleri geride bırak! 💕";
-		startButton.innerHTML = 'Oyuna başla <span aria-hidden="true">→</span>';
+		message.textContent = "Engellerden zıpla, peşindeki kalpleri geride bırak! 💕";
+		startButton.innerHTML = 'Aşktan kaç <span aria-hidden="true">→</span>';
 		game.distance = 0;
 		game.jumpHeight = 0;
 		game.jumpVelocity = 0;
+		game.captured = false;
+		game.captureProgress = 0;
 		game.obstacles = [];
 		updateScore();
 		toggle.focus();
