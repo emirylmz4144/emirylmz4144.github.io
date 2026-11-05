@@ -1,0 +1,23 @@
+services:
+  - type: web
+    name: emir-yilmaz-portfolio
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /api/contact/status
+    envVars:
+      - key: TRUST_PROXY
+        value: "true"
+      - key: CONTACT_ALLOWED_ORIGINS
+        value: https://emirylmz4144.github.io
+      - key: CONTACT_TO_EMAIL
+        value: emiryilmaz4144@gmail.com
+      - key: OPENAI_MODERATION_MODEL
+        value: omni-moderation-latest
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: RESEND_API_KEY
+        sync: false
+      - key: RESEND_FROM_EMAIL
+        sync: false

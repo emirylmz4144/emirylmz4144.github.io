@@ -37,6 +37,10 @@
 	}
 
 	if (!questionForm || !verificationForm || !verificationPanel || !questionStatus) return;
+	const apiBase = typeof window.PORTFOLIO_CONTACT_API_BASE === "string"
+		? window.PORTFOLIO_CONTACT_API_BASE.trim().replace(/\/+$/, "")
+		: "";
+	const apiUrl = (path) => `${apiBase}${path}`;
 
 	const message = (text, state = "") => {
 		questionStatus.textContent = text;
@@ -58,7 +62,7 @@
 	const post = async (url, payload) => {
 		let response;
 		try {
-			response = await fetch(url, {
+			response = await fetch(apiUrl(url), {
 				method: "POST",
 				headers: { "Content-Type": "application/json" },
 				body: JSON.stringify(payload),
@@ -81,7 +85,7 @@
 		}
 
 		try {
-			const response = await fetch("/api/contact/status", { headers: { Accept: "application/json" } });
+			const response = await fetch(apiUrl("/api/contact/status"), { headers: { Accept: "application/json" } });
 			const contentType = (response.headers.get("content-type") || "").toLowerCase();
 			if (!contentType.includes("application/json")) {
 				message(serverUnavailableMessage, "error");

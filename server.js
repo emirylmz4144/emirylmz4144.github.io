@@ -11,6 +11,18 @@ loadEnvFile();
 const PORT = Number(process.env.PORT || 3000);
 const CONTACT_TO_EMAIL = (process.env.CONTACT_TO_EMAIL || 'emiryilmaz4144@gmail.com').trim().toLowerCase();
 const OPENAI_MODEL = process.env.OPENAI_MODERATION_MODEL || 'omni-moderation-latest';
+const CONTACT_ALLOWED_ORIGINS = new Set(
+	(process.env.CONTACT_ALLOWED_ORIGINS || '')
+		.split(',')
+		.map((origin) => {
+			try {
+				return new URL(origin.trim()).origin;
+			} catch {
+				return '';
+			}
+		})
+		.filter(Boolean),
+);
 const MAX_BODY_BYTES = 12 * 1024;
 const CHALLENGE_TTL_MS = 10 * 60 * 1000;
 const challenges = new Map();
@@ -52,17 +64,18 @@ function sendJson(response, status, payload) {
 }
 
 function setSecurityHeaders(response) {
+	const connectSources = ["'self'", ...CONTACT_ALLOWED_ORIGINS].join(' ');
 	response.setHeader('X-Content-Type-Options', 'nosniff');
 	response.setHeader('X-Frame-Options', 'DENY');
 	response.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
 	response.setHeader('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
 	response.setHeader(
 		'Content-Security-Policy',
-		"default-src 'self'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; img-src 'self' data:; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; connect-src 'self'",
+		`default-src 'self'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; img-src 'self' data:; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; connect-src ${connectSources}`,
 	);
 }
 
-function ensureSameOrigin(request) {
+function ensureAllowedOrigin(request) {
 	const origin = request.headers.origin;
 	if (!origin) return;
 
@@ -79,9 +92,21 @@ function ensureSameOrigin(request) {
 		: '';
 	const protocol = forwardedProtocol || (request.socket.encrypted ? 'https' : 'http');
 	const expectedOrigin = request.headers.host ? `${protocol}://${request.headers.host}` : '';
-	if (!expectedOrigin || parsedOrigin.origin.toLowerCase() !== expectedOrigin.toLowerCase()) {
+	const normalizedOrigin = parsedOrigin.origin.toLowerCase();
+	if (normalizedOrigin !== expectedOrigin.toLowerCase() && !CONTACT_ALLOWED_ORIGINS.has(normalizedOrigin)) {
 		throw new HttpError(403, 'Bu istek kabul edilmedi.');
 	}
+}
+
+function setCorsHeaders(request, response) {
+	const origin = request.headers.origin;
+	if (!origin) return;
+	const normalizedOrigin = new URL(origin).origin;
+	response.setHeader('Access-Control-Allow-Origin', normalizedOrigin);
+	response.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+	response.setHeader('Access-Control-Allow-Headers', 'Accept, Content-Type');
+	response.setHeader('Access-Control-Max-Age', '600');
+	response.setHeader('Vary', 'Origin');
 }
 
 async function readJson(request) {
@@ -297,7 +322,7 @@ function safeHashEqual(expected, actual) {
 
 function checkSameSiteAndMethod(request) {
 	if (request.method !== 'POST') throw new HttpError(405, 'Bu işlem desteklenmiyor.');
-	ensureSameOrigin(request);
+	ensureAllowedOrigin(request);
 }
 
 async function requestVerificationCode(request, response) {
@@ -472,9 +497,18 @@ async function handleRequest(request, response) {
 	setSecurityHeaders(response);
 	const url = new URL(request.url, `http://${request.headers.host || 'localhost'}`);
 	try {
+		if (url.pathname.startsWith('/api/')) {
+			ensureAllowedOrigin(request);
+			setCorsHeaders(request, response);
+			if (request.method === 'OPTIONS') {
+				response.writeHead(204, { 'Cache-Control': 'no-store' });
+				response.end();
+				return;
+			}
+		}
+
 		if (url.pathname === '/api/contact/status') {
 			if (request.method !== 'GET') throw new HttpError(405, 'Bu işlem desteklenmiyor.');
-			ensureSameOrigin(request);
 			sendJson(response, 200, { configured: contactServicesReady() });
 			return;
 		}
@@ -504,7 +538,7 @@ const server = http.createServer((request, response) => {
 	void handleRequest(request, response);
 });
 
-server.listen(PORT, () => {
+server.listen(PORT, '0.0.0.0', () => {
 	console.log(`Portfolyo sunucusu http://localhost:${PORT} adresinde hazır.`);
 });
 
