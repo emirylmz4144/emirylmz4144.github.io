@@ -1,0 +1,12 @@
+{
+  "name": "emir-yilmaz-portfolio",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Emir Yılmaz kişisel portfolyo sitesi ve iletişim formu",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}

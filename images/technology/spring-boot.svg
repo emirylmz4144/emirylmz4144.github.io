@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title">
+  <title>Spring Boot</title>
+  <path d="M52 9C34 9 19 14 11 25 4 35 6 48 14 53c8 5 19 2 27-7 8-9 12-21 12-35 0-1-.4-2-1-2z" fill="#6db33f"/>
+  <path d="M13 49c8-11 18-20 31-29" fill="none" stroke="#fff" stroke-linecap="round" stroke-width="3"/>
+  <path d="M27 39c5-1 9 0 12 2m-5-12c4-1 7-.6 10 .6" fill="none" stroke="#fff" stroke-linecap="round" stroke-width="2.5"/>
+</svg>
