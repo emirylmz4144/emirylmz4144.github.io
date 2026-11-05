@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 150" role="img" aria-labelledby="title">
+  <title>Web development illustration</title>
+  <rect x="7" y="7" width="206" height="136" rx="24" fill="#faece9"/>
+  <rect x="29" y="28" width="162" height="96" rx="13" fill="#fff" stroke="#dd6472" stroke-width="2.5"/>
+  <path d="M30 51h160" stroke="#f1ccd0" stroke-width="2.5"/>
+  <circle cx="44" cy="40" r="3.5" fill="#dd6472"/><circle cx="56" cy="40" r="3.5" fill="#f4b74f"/><circle cx="68" cy="40" r="3.5" fill="#c8ed73"/>
+  <path d="m73 77-13 11 13 11m74-22 13 11-13 11m-20-28-17 36" fill="none" stroke="#526be8" stroke-linecap="round" stroke-linejoin="round" stroke-width="5"/>
+  <rect x="43" y="107" width="37" height="6" rx="3" fill="#c8ed73"/><rect x="86" y="107" width="23" height="6" rx="3" fill="#f4b74f"/>
+</svg>

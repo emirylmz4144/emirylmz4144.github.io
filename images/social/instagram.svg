@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title">
+  <title>Instagram</title>
+  <defs><linearGradient id="instagram-gradient" x1="8" y1="58" x2="57" y2="6" gradientUnits="userSpaceOnUse"><stop stop-color="#ffb347"/><stop offset=".48" stop-color="#f04b72"/><stop offset="1" stop-color="#8f45c4"/></linearGradient></defs>
+  <rect x="4" y="4" width="56" height="56" rx="17" fill="url(#instagram-gradient)"/>
+  <rect x="16" y="16" width="32" height="32" rx="10" fill="none" stroke="#fff" stroke-width="4"/>
+  <circle cx="32" cy="32" r="8" fill="none" stroke="#fff" stroke-width="4"/>
+  <circle cx="42" cy="22" r="2.5" fill="#fff"/>
+</svg>

@@ -1,726 +1,199 @@
-<!DOCTYPE HTML>
-<html>
-	<head>
+<!doctype html>
+<html lang="tr">
+<head>
 	<meta charset="utf-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>Emir Yılmaz</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta name="description" content="" />
-	<meta name="keywords" content="" />
-	<meta name="author" content="" />
-
-  <!-- Facebook and Twitter integration -->
-	<meta property="og:title" content=""/>
-	<meta property="og:image" content=""/>
-	<meta property="og:url" content=""/>
-	<meta property="og:site_name" content=""/>
-	<meta property="og:description" content=""/>
-	<meta name="twitter:title" content="" />
-	<meta name="twitter:image" content="" />
-	<meta name="twitter:url" content="" />
-	<meta name="twitter:card" content="" />
-
-	<!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
-	<link rel="shortcut icon" href="favicon.ico">
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
-	<link href="https://fonts.googleapis.com/css?family=Quicksand:300,400,500,700" rel="stylesheet">
-	<link href="https://fonts.googleapis.com/css?family=Playfair+Display:400,400i,700" rel="stylesheet">
-	
-	<!-- Animate.css -->
-	<link rel="stylesheet" href="css/animate.css">
-	<!-- Icomoon Icon Fonts-->
-	<link rel="stylesheet" href="css/icomoon.css">
-	<!-- Bootstrap  -->
-	<link rel="stylesheet" href="css/bootstrap.css">
-	<!-- Flexslider  -->
-	<link rel="stylesheet" href="css/flexslider.css">
-	<!-- Flaticons  -->
-	<link rel="stylesheet" href="fonts/flaticon/font/flaticon.css">
-	<!-- Owl Carousel -->
-	<link rel="stylesheet" href="css/owl.carousel.min.css">
-	<link rel="stylesheet" href="css/owl.theme.default.min.css">
-	<!-- Theme style  -->
-	<link rel="stylesheet" href="css/style.css">
-
-	<!-- Modernizr JS -->
-	<script src="js/modernizr-2.6.2.min.js"></script>
-	<!-- FOR IE9 below -->
-	<!--[if lt IE 9]>
-	<script src="js/respond.min.js"></script>
-	<![endif]-->
-
-	</head>
-	<body>
-	<div id="colorlib-page">
-		<div class="container-wrap">
-		<a href="#" class="js-colorlib-nav-toggle colorlib-nav-toggle" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar"><i></i></a>
-		<aside id="colorlib-aside" role="complementary" class="border js-fullheight">
-			<div class="text-center">
-				<div class="author-img" style="background-image: url(images/himself/IMG_20231111_235400_375.jpg);"></div>
-				<h1 id="colorlib-logo"><a href="index.html">Emir Yılmaz</a></h1>
-				<span class="position"><a href="#">Software Engiinering Student</a> <br> inonu University</span>
-			</div>
-			<nav id="colorlib-main-menu" role="navigation" class="navbar">
-				<div id="navbar" class="collapse">
-					<ul>
-						<li class="active"><a href="#" data-nav-section="home">Anasayfa</a></li>
-						<li><a href="#" data-nav-section="about">Hakkımda</a></li>
-						<li><a href="#" data-nav-section="education">Eğitim</a></li>
-						<li><a href="#" data-nav-section="contact">İletişim</a></li>
-					</ul>
-				</div>
+	<meta name="theme-color" content="#f6f6f1">
+	<meta name="description" content="Emir Yılmaz — İnönü Üniversitesi Yazılım Mühendisliği öğrencisi ve backend geliştirme meraklısı.">
+	<meta name="author" content="Emir Yılmaz">
+	<meta property="og:title" content="Emir Yılmaz — Yazılım Mühendisliği Öğrencisi">
+	<meta property="og:description" content="Backend geliştirme, veri ve web teknolojileri üzerine kişisel portfolyo.">
+	<meta property="og:type" content="website">
+	<title>Emir Yılmaz — Yazılım Mühendisliği Öğrencisi</title>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="css/portfolio.css?v=5">
+</head>
+<body>
+	<a class="skip-link" href="#icerik">İçeriğe geç</a>
+	<header class="site-header">
+		<div class="header-inner">
+			<a class="brand" href="#anasayfa" aria-label="Emir Yılmaz, anasayfa">
+				<span class="brand-mark">ey<span>.</span></span>
+				<span class="brand-name">Emir Yılmaz</span>
+			</a>
+			<button class="menu-toggle" type="button" aria-label="Menüyü aç" aria-expanded="false" aria-controls="site-nav">
+				<span></span><span></span>
+			</button>
+			<nav class="site-nav" id="site-nav" aria-label="Ana menü">
+				<a href="#hakkimda">Hakkımda</a>
+				<a href="#uzmanlik">Uzmanlık</a>
+				<a href="#egitim">Eğitim</a>
+				<a class="nav-contact" href="#iletisim">İletişime geç <span aria-hidden="true">↗</span></a>
 			</nav>
+		</div>
+	</header>
 
-			
-
-		</aside>
-
-		<div id="colorlib-main">
-			<section id="colorlib-hero" class="js-fullheight" data-section="home">
-				<div class="flexslider js-fullheight">
-					<ul class="slides">
-				   	<li style="background-image: url(images/himself/10403.jpg); background-position:center;">
-				   		<div class="overlay"></div>
-				   		<div class="container-fluid">
-				   			<div class="row">
-					   			<div class="col-md-6 col-md-offset-3 col-md-pull-3 col-sm-12 col-xs-12 js-fullheight slider-text">
-					   				<div class="slider-text-inner js-fullheight">
-					   					<div class="desc">
-						   					 <h1 style="color:cornflowerblue;margin-top: 40%;">Emir Yılmaz<hr>BACKEND DEVELOPER</h1>
-						   					<h2 style="color: white;">Direkt İletişim için LinkedIn: <a href="https://www.linkedin.com/in/emir-y%C4%B1lmaz-428886237/" target="_blank">Emir Yılmaz</a></h2>
-											</div>
-					   				</div>
-					   			</div>
-					   		</div>
-				   		</div>
-				   	</li>
-				   	<li style="background-image: url(images/himself/IMG_20230710_004741_757.jpg); background-position: center;">
-				   		<div class="overlay"></div>
-				   		<div class="container-fluid">
-				   			<div class="row">
-					   			<div class="col-md-6 col-md-offset-3 col-md-pull-3 col-sm-12 col-xs-12 js-fullheight slider-text">
-					   				<div class="slider-text-inner">
-					   					<div class="desc">
-						   					<h1 style="color: aliceblue; margin-top: 30%;">Yazılım Mühendisi <hr> Backend Developer</h1>
-											</div>
-					   				</div>
-					   			</div>
-					   		</div>
-				   		</div>
-				   	</li>
-				  	</ul>
-			  	</div>
-			</section>
-
-			<section class="colorlib-about" data-section="about">
-				<div class="colorlib-narrow-content">
-					<div class="row">
-						<div class="col-md-12">
-							<div class="row row-bottom-padded-sm animate-box" data-animate-effect="fadeInLeft">
-								<div class="col-md-12">
-									<div class="about-desc">
-										<span class="heading-meta">Hakkımda</span>
-										<h2 class="colorlib-heading">Ben Kimim ?</h2>
-										<p><strong>Merhaba Ben Emir Yılmaz</strong> İnönü üniversitesi Yazılım mühendisliği öğrencisyim. Yazılım Geliştirici özellikle de backend  geliştirici olma hedefim doğrultusunda Java, C#, Spring ve mikroservisler gibi kapsamlı ve derin teknolojiler üzerine çalışıyorum. Bu teknolojiler, benim için sadece diller veya araçlar değil; aynı zamanda güçlü, ölçeklenebilir ve güvenli sistemler inşa etme yeteneğimi geliştiren yapı taşları.
-
-											Öğrenim ve Uygulama Alanlarım:
-											
-											Java & C#: Nesne yönelimli programlama prensiplerini benimseyerek, sağlam ve esnek yazılımlar geliştiriyorum.
-											Spring Framework: Bu framework ile dependency injection, security, transactions ve RESTful services gibi alanlarda kendimi geliştiriyorum.
-											Mikroservis Mimarileri: Bağımsız hizmetler olarak tasarlanan sistemlerin modüler yapısını ve yönetimini öğreniyorum.
-											Her gün, yazılım dünyasındaki yenilikleri takip ediyor ve yeni teknolojileri öğrenerek kendimi sürekli geliştiriyorum. Bu sayede, yazılım mühendisliği alanında başarılı bir kariyerin temellerini atıyorum. Kendi hikayemi anlatırken, bu yolculuğun benim için ne kadar heyecan verici olduğunu hissedebiliyorum. Her yeni proje, her kod satırı, beni hedefime bir adım daha yaklaştırıyor.</p>
-									</div>
-								</div>
-							</div>
-							<div class="row">
-								<div class="row animate-box" data-animate-effect="fadeInTop">
-									<div class="services color-3">
-										<span class="icon2"><i class="icon-data"></i></span>
-										<h3>Backend Development</h3>
-										<p>Java, C#, .Net, ASP.Net, Spring, Hibernate, Kubernate, Docker, JakartaEE and Structures of JakartaEE Technology,Version Constorl Systems and Menage them (Git,Github,Gitlab etc..)</p>
-									</div>
-								</div>
-								<div class="row animate-box" data-animate-effect="fadeInRight">
-									<div class="services color-2">
-										<span class="icon2"><i class="icon-globe-outline"></i></span>
-										<h3>Data Science</h3>
-										<p>Python,Numpy,Pandas,Sql Technologies,Apache Kafka,Kaggle,Data Menagment Systems</p>
-									</div>
-								</div>
-								
-								<div class="row animate-box" data-animate-effect="fadeInBottom">
-									<div class="services color-4">
-										<span class="icon2"><i class="fa fa-desktop"></i></span>
-										<h3>Web Development</h3>
-										<p>Html,Css,JavaScript,React,Vue,Bootstrap</p>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
+	<main id="icerik">
+		<section class="hero page-width" id="anasayfa" aria-labelledby="hero-title">
+			<div class="hero-copy">
+				<p class="eyebrow"><span class="status-dot"></span> İnönü Üniversitesi · Yazılım Mühendisliği</p>
+				<p class="hero-greeting">Merhaba, ben Emir.</p>
+				<h1 id="hero-title">Fikirleri çalışan<br><span>yazılıma</span> dönüştürüyorum.</h1>
+				<p class="hero-description">Backend geliştirme odağında; veri ve web teknolojileriyle ilgilenen bir yazılım mühendisliği öğrencisiyim.</p>
+				<div class="hero-actions">
+					<a class="button button-dark" href="#hakkimda">Beni tanıyın <span aria-hidden="true">↓</span></a>
+					<a class="text-link" href="https://www.linkedin.com/in/emir-y%C4%B1lmaz-54271a42a/" target="_blank" rel="noopener noreferrer">LinkedIn profilim <span aria-hidden="true">↗</span></a>
 				</div>
-			</section>
-			
-			<div id="colorlib-counter" class="colorlib-counters" style="background-image: url(images/himself/1000013644.jpg); background-size: contain;" data-stellar-background-ratio="0.5">
-				<div class="overlay"></div>
-				<div class="colorlib-narrow-content">
-					<div class="row">
-					</div>
-					<div class="row">
-						<div class="col-md-3 text-center animate-box">
-							<span class="colorlib-counter js-counter" data-from="0" data-to="800" data-speed="9000" data-refresh-interval="50"></span>
-							<span class="colorlib-counter-label">İçilen Kahve Sayısı</span>
-						</div>
-						<div class="col-md-3 text-center animate-box">
-							<span class="colorlib-counter js-counter" data-from="0" data-to="200" data-speed="9000" data-refresh-interval="50"></span>
-							<span class="colorlib-counter-label">Başarıyla Tamamlanan Projeler</span>
-						</div>
-						<div class="col-md-3 text-center animate-box">
-							<span class="colorlib-counter js-counter" data-from="0" data-to="Nan" data-speed="5000" data-refresh-interval="50"></span>
-							<span class="colorlib-counter-label">İçilen Sigara Sayısı</span>
-						</div>
-						<div class="col-md-3 text-center animate-box">
-							<span class="colorlib-counter js-counter" data-from="0" data-to="8" data-speed="15000" data-refresh-interval="50"></span>
-							<span class="colorlib-counter-label">Mesleğin Getirdiği Gerginlik  <br>(10 üzerinden)</span>
-						</div>
-					</div>
+				<div class="hero-note"><span class="note-line"></span><span>Her gün daha iyiye.</span></div>
+			</div>
+			<div class="hero-visual">
+				<div class="visual-orbit orbit-one"></div>
+				<div class="visual-orbit orbit-two"></div>
+				<div class="portrait-frame">
+					<img src="images/himself/IMG_20231111_235400_375.jpg" alt="Emir Yılmaz" fetchpriority="high">
+				</div>
+				<div class="photo-label"><span class="label-spark">✳</span><span>Ömür boyu<br>öğrenci</span></div>
+				<div class="visual-index">01 <span>/</span> 04</div>
+			</div>
+			<div class="hero-scroll" aria-hidden="true"><span></span> Aşağı kaydır</div>
+		</section>
+
+		<div class="tech-strip" role="group" aria-label="Çalıştığım teknolojiler">
+			<div class="tech-strip-inner page-width">
+				<span class="strip-label">ÖNE ÇIKAN TEKNOLOJİLER</span>
+				<div class="tech-list"><span>Java</span><i aria-hidden="true">✳</i><span>Spring Boot</span><i aria-hidden="true">✳</i><span>Angular</span><i aria-hidden="true">✳</i><span>Python</span></div>
+			</div>
+		</div>
+
+		<section class="about-section section-space page-width" id="hakkimda" aria-labelledby="about-title">
+			<div class="section-kicker"><span>01</span> Kısaca ben</div>
+			<div class="about-layout">
+				<h2 class="section-title" id="about-title">Merakla başlar,<br><span>öğrenerek</span> büyür.</h2>
+				<div class="about-copy">
+					<p class="lead-copy">Ben Emir Yılmaz. İnönü Üniversitesi'nde Yazılım Mühendisliği okuyorum; yazılımın arka planında sağlam, anlaşılır ve işe yarar çözümler üretmeye odaklanıyorum.</p>
+					<p>En çok backend geliştirme ilgimi çekiyor. Bunun yanında veri bilimi ve web geliştirme alanlarında yeni araçlar öğreniyor, öğrendiklerimi projelerle pekiştiriyorum. Benim için iyi yazılım, sürekli merak edip daha iyisini aramaktan geçiyor.</p>
+					<a class="underlined-link" href="#uzmanlik">Nelerle ilgilendiğimi keşfet <span aria-hidden="true">→</span></a>
 				</div>
 			</div>
+			<div class="about-signature" aria-hidden="true">merak et · üret · geliş</div>
+		</section>
 
-
-
-
-			<!--
-				<section class="colorlib-skills" data-section="skills">
-				<div class="colorlib-narrow-content">
-					<div class="row">
-						<div class="col-md-6 col-md-offset-3 col-md-pull-3 animate-box" data-animate-effect="fadeInLeft">
-							<span class="heading-meta">My Specialty</span>
-							<h2 class="colorlib-heading animate-box">Yetenekler</h2>
-						</div>
+		<section class="expertise-section section-space" id="uzmanlik" aria-labelledby="expertise-title">
+			<div class="page-width">
+				<div class="section-heading-row">
+					<div>
+						<div class="section-kicker"><span>02</span> İlgi alanlarım</div>
+						<h2 class="section-title" id="expertise-title">Üzerinde çalıştığım<br><span>alanlar.</span></h2>
 					</div>
-					<div class="row">
-						<div class="col-md-12 animate-box" data-animate-effect="fadeInLeft">
-							<p>The Big Oxmox advised her not to do so, because there were thousands of bad Commas, wild Question Marks and devious Semikoli, but the Little Blind Text didn’t listen. She packed her seven versalia, put her initial into the belt and made herself on the way.</p>
-						</div>
-						<div class="col-md-6 animate-box" data-animate-effect="fadeInLeft">
-							<div class="progress-wrap">
-								<h3>Photoshop</h3>
-								<div class="progress">
-								 	<div class="progress-bar color-1" role="progressbar" aria-valuenow="75"
-								  	aria-valuemin="0" aria-valuemax="100" style="width:75%">
-								    <span>75%</span>
-								  	</div>
-								</div>
-							</div>
-						</div>
-						<div class="col-md-6 animate-box" data-animate-effect="fadeInRight">
-							<div class="progress-wrap">
-								<h3>jQuery</h3>
-								<div class="progress">
-								 	<div class="progress-bar color-2" role="progressbar" aria-valuenow="60"
-								  	aria-valuemin="0" aria-valuemax="100" style="width:60%">
-								    <span>60%</span>
-								  	</div>
-								</div>
-							</div>
-						</div>
-						<div class="col-md-6 animate-box" data-animate-effect="fadeInLeft">
-							<div class="progress-wrap">
-								<h3>HTML5</h3>
-								<div class="progress">
-								 	<div class="progress-bar color-3" role="progressbar" aria-valuenow="85"
-								  	aria-valuemin="0" aria-valuemax="100" style="width:85%">
-								    <span>85%</span>
-								  	</div>
-								</div>
-							</div>
-						</div>
-						<div class="col-md-6 animate-box" data-animate-effect="fadeInRight">
-							<div class="progress-wrap">
-								<h3>CSS3</h3>
-								<div class="progress">
-								 	<div class="progress-bar color-4" role="progressbar" aria-valuenow="90"
-								  	aria-valuemin="0" aria-valuemax="100" style="width:90%">
-								    <span>90%</span>
-								  	</div>
-								</div>
-							</div>
-						</div>
-						<div class="col-md-6 animate-box" data-animate-effect="fadeInLeft">
-							<div class="progress-wrap">
-								<h3>WordPress</h3>
-								<div class="progress">
-								 	<div class="progress-bar color-5" role="progressbar" aria-valuenow="70"
-								  	aria-valuemin="0" aria-valuemax="100" style="width:70%">
-								    <span>70%</span>
-								  	</div>
-								</div>
-							</div>
-						</div>
-						<div class="col-md-6 animate-box" data-animate-effect="fadeInRight">
-							<div class="progress-wrap">
-								<h3>SEO</h3>
-								<div class="progress">
-								 	<div class="progress-bar color-6" role="progressbar" aria-valuenow="80"
-								  	aria-valuemin="0" aria-valuemax="100" style="width:80%">
-								    <span>80%</span>
-								  	</div>
-								</div>
-							</div>
-						</div>
+					<p class="section-intro">Farklı teknolojiler arasında bağlantı kurup gerçek ihtiyaçlara uygun çözümler geliştirmeyi seviyorum.</p>
+				</div>
+				<div class="expertise-grid">
+					<article class="expertise-card card-backend">
+						<div class="card-top"><span class="card-number">01</span><img class="card-illustration" src="images/illustrations/backend.svg" alt="Backend sistemleri ve sunucu ağı çizimi"></div>
+						<h3>Backend Development</h3>
+						<p>Java ve Spring Boot odağında; API, servis ve sunucu tarafı uygulama geliştirme.</p>
+						<div class="tag-list"><span>Java</span><span>C#</span><span>.NET</span><span>ASP.NET</span><span>Spring Boot</span><span>Hibernate</span><span>Kubernetes</span><span>Docker</span><span>Jakarta EE</span><span>Git</span><span>GitHub</span><span>GitLab</span></div>
+					</article>
+					<article class="expertise-card card-data">
+						<div class="card-top"><span class="card-number">02</span><img class="card-illustration" src="images/illustrations/data-science.svg" alt="Veri grafiği ve analiz çizimi"></div>
+						<h3>Data Science</h3>
+						<p>Veri analizi, akış sistemleri ve veri yönetimi üzerine çalışma.</p>
+						<div class="tag-list"><span>Python</span><span>NumPy</span><span>Pandas</span><span>SQL</span><span>Apache Kafka</span><span>Kaggle</span><span>Data Management Systems</span></div>
+					</article>
+					<article class="expertise-card card-web">
+						<div class="card-top"><span class="card-number">03</span><img class="card-illustration" src="images/illustrations/web-development.svg" alt="Tarayıcı ve kod penceresi çizimi"></div>
+						<h3>Web Development</h3>
+						<p>Angular odağında, erişilebilir ve özenli web arayüzleri geliştirme.</p>
+						<div class="tag-list"><span>HTML5</span><span>CSS3</span><span>JavaScript</span><span>Angular</span><span>React</span><span>Vue</span><span>Bootstrap</span></div>
+					</article>
+				</div>
+			</div>
+		</section>
+
+		<section class="education-section section-space page-width" id="egitim" aria-labelledby="education-title">
+			<div class="section-kicker"><span>03</span> Eğitim yolculuğum</div>
+			<div class="education-panel">
+				<div class="education-mark"><img src="images/education/inonu-university-official.png" alt="İnönü Üniversitesi logosu"></div>
+				<div class="education-copy">
+					<p class="education-label">Lisans · Devam ediyor</p>
+					<h2 id="education-title">Yazılım Mühendisliği</h2>
+					<p>İnönü Üniversitesi</p>
+				</div>
+				<div class="education-side"><span class="status-dot"></span> Öğrenmeye devam</div>
+			</div>
+		</section>
+
+		<section class="contact-section section-space page-width" id="iletisim" aria-labelledby="contact-title">
+			<div class="section-kicker"><span>04</span> İletişim</div>
+			<div class="contact-layout">
+				<div class="contact-intro">
+					<p class="contact-eyebrow">Bir fikrin ya da sorun mu var?</p>
+					<h2 class="section-title" id="contact-title">Aklına takılan<br><span>bir şey mi var?</span></h2>
+					<p class="contact-description">Bana sosyal medyadan ulaşabilir ya da sorunu doğrudan bu form üzerinden gönderebilirsin.</p>
+					<div class="social-links" aria-label="Sosyal medya ve e-posta">
+						<a class="social-link" href="https://www.instagram.com/emiryilmaz4144/?hl=tr" target="_blank" rel="noopener noreferrer" aria-label="Instagram profilim yeni sekmede açılır">
+							<img class="social-logo" src="images/social/instagram.svg" alt="" aria-hidden="true"><span>Instagram</span><span class="social-arrow" aria-hidden="true">↗</span>
+						</a>
+						<a class="social-link" href="https://www.linkedin.com/in/emir-y%C4%B1lmaz-54271a42a/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn profilim yeni sekmede açılır">
+							<img class="social-logo" src="images/social/linkedin.svg" alt="" aria-hidden="true"><span>LinkedIn</span><span class="social-arrow" aria-hidden="true">↗</span>
+						</a>
+						<a class="social-link" href="mailto:emiryilmaz4144@gmail.com">
+							<img class="social-logo social-logo-mail" src="images/social/email.svg" alt="" aria-hidden="true"><span>E-posta</span><span class="social-arrow" aria-hidden="true">↗</span>
+						</a>
 					</div>
 				</div>
-			</section>
-			-->
 
-			<section class="colorlib-education" data-section="education">
-				<div class="colorlib-narrow-content">
-					<div class="row">
-						<div class="col-md-6 col-md-offset-3 col-md-pull-3 animate-box" data-animate-effect="fadeInLeft">
-							<span class="heading-meta">Eğitimler</span>
-							<h2 class="colorlib-heading animate-box">Eğitimler</h2>
-						</div>
+				<div class="question-card">
+					<div class="question-card-head">
+						<div class="question-card-mark" aria-hidden="true">✳</div>
+						<div><p class="question-eyebrow">DOĞRUDAN BANA ULAŞ</p><h3>Bana soru sor</h3></div>
 					</div>
-					<div class="row">
-						<div class="col-md-12 animate-box" data-animate-effect="fadeInLeft">
-							<div class="fancy-collapse-panel">
-								<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
-									<div class="panel panel-default">
-									    <div class="panel-heading" role="tab" id="headingOne">
-									        <h4 class="panel-title">
-									            <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">Lisans Programları
-									            </a>
-									        </h4>
-									    </div>
-									    <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
-									         <div class="panel-body">
-									            <div class="row">
-										      		<div class="col-md-6">
-										      			<p>İnönü üniversitesi Yazılım Mühendisliği Lisans Programı</p>
-														<hr>
-														<p>Turgut Özal Üniversitesi Yazılım Mühensiliği Lisans Programı</p>
-										      		</div>
-										      		
-										      	</div>
-									         </div>
-									    </div>
-									</div>
-									<!--
-										
-									<div class="panel panel-default">
-									    <div class="panel-heading" role="tab" id="headingTwo">
-									        <h4 class="panel-title">
-									            <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">Bachelor Degree of Computer Science
-									            </a>
-									        </h4>
-									    </div>
-									    <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
-									        <div class="panel-body">
-									            <p>Far far away, behind the word <strong>mountains</strong>, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean.</p>
-													<ul>
-														<li>Separated they live in Bookmarksgrove right</li>
-														<li>Separated they live in Bookmarksgrove right</li>
-													</ul>
-									        </div>
-									    </div>
-									</div>
-									<div class="panel panel-default">
-									    <div class="panel-heading" role="tab" id="headingThree">
-									        <h4 class="panel-title">
-									            <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">Diploma in Information Technology
-									            </a>
-									        </h4>
-									    </div>
-									    <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
-									        <div class="panel-body">
-									            <p>Far far away, behind the word <strong>mountains</strong>, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean.</p>	
-									        </div>
-									    </div>
-									</div>
+					<p class="question-card-copy">Bilgilerini ve sorunu yaz. E-posta adresini doğruladığında mesajın bana iletilsin.</p>
 
-									<div class="panel panel-default">
-									    <div class="panel-heading" role="tab" id="headingFour">
-									        <h4 class="panel-title">
-									            <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseFour" aria-expanded="false" aria-controls="collapseFour">Diploma in Information Technology
-									            </a>
-									        </h4>
-									    </div>
-									    <div id="collapseFour" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFour">
-									        <div class="panel-body">
-									            <p>Far far away, behind the word <strong>mountains</strong>, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean.</p>	
-									        </div>
-									    </div>
-									</div>
-
-									<div class="panel panel-default">
-									    <div class="panel-heading" role="tab" id="headingFive">
-									        <h4 class="panel-title">
-									            <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseFive" aria-expanded="false" aria-controls="collapseFive">High School Secondary Education
-									            </a>
-									        </h4>
-									    </div>
-									    <div id="collapseFive" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFive">
-									        <div class="panel-body">
-									            <p>Far far away, behind the word <strong>mountains</strong>, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean.</p>	
-									        </div>
-									    </div>
-									</div>
-									-->
-
-								</div>
-							</div>
+					<form class="question-form" id="question-form">
+						<div class="form-grid">
+							<label class="form-field" for="question-name">Adın soyadın
+								<input id="question-name" name="name" type="text" autocomplete="name" maxlength="80" placeholder="Adını yaz" required>
+							</label>
+							<label class="form-field" for="question-email">E-posta adresin
+								<input id="question-email" name="email" type="email" autocomplete="email" maxlength="254" placeholder="ornek@mail.com" required>
+							</label>
 						</div>
+						<label class="form-field" for="question-text">Sorun
+							<textarea id="question-text" name="question" rows="5" minlength="10" maxlength="2000" placeholder="Merak ettiğini buraya yaz..." required></textarea>
+						</label>
+						<div class="honeypot" aria-hidden="true">
+							<label for="question-website">Web sitesi</label>
+							<input id="question-website" name="website" type="text" tabindex="-1" autocomplete="off">
+						</div>
+						<p class="question-privacy">Sorun, spam ve uygunsuz içerik kontrolü için yapay zekâ destekli bir filtreyle incelenir. E-posta adresin tek kullanımlık kodla doğrulanır.</p>
+						<button class="button button-dark question-submit" type="submit" disabled>E-postama kod gönder <span aria-hidden="true">↗</span></button>
+					</form>
+
+					<div class="verification-panel" id="verification-panel" hidden>
+						<div class="verification-heading"><span class="verification-icon" aria-hidden="true">✉</span><div><h4>E-postanı kontrol et</h4><p>Kodu <strong id="verification-email"></strong> adresine gönderdik.</p></div></div>
+						<form id="verification-form">
+							<label class="form-field" for="verification-code">6 haneli doğrulama kodu
+								<input id="verification-code" name="code" type="text" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]{6}" maxlength="6" placeholder="000000" required>
+							</label>
+							<button class="button button-dark question-submit" type="submit">Adresi doğrula ve soruyu gönder <span aria-hidden="true">↗</span></button>
+							<button class="edit-question" id="edit-question" type="button">Bilgileri düzenle</button>
+						</form>
+						<button class="edit-question" id="new-question" type="button" hidden>Yeni bir soru sor</button>
 					</div>
+					<p class="question-status" id="question-status" role="status" aria-live="polite"></p>
 				</div>
-			</section>
-			<!--
-				
-			<section class="colorlib-experience" data-section="experience">
-				<div class="colorlib-narrow-content">
-					<div class="row">
-						<div class="col-md-6 col-md-offset-3 col-md-pull-3 animate-box" data-animate-effect="fadeInLeft">
-							<span class="heading-meta">Experience</span>
-							<h2 class="colorlib-heading animate-box">Work Experience</h2>
-						</div>
-					</div>
-					<div class="row">
-						<div class="col-md-12">
-				         <div class="timeline-centered">
-					         <article class="timeline-entry animate-box" data-animate-effect="fadeInLeft">
-					            <div class="timeline-entry-inner">
+			</div>
+		</section>
+	</main>
 
-					               <div class="timeline-icon color-1">
-					                  <i class="icon-pen2"></i>
-					               </div>
-
-					               <div class="timeline-label">
-					                  <h2><a href="#">Full Stack Developer</a> <span>2017-2018</span></h2>
-					                  <p>Tolerably earnestly middleton extremely distrusts she boy now not. Add and offered prepare how cordial two promise. Greatly who affixed suppose but enquire compact prepare all put. Added forth chief trees but rooms think may.</p>
-					               </div>
-					            </div>
-					         </article>
-
-
-					         <article class="timeline-entry animate-box" data-animate-effect="fadeInRight">
-					            <div class="timeline-entry-inner">
-					               <div class="timeline-icon color-2">
-					                  <i class="icon-pen2"></i>
-					               </div>
-					               <div class="timeline-label">
-					               	<h2><a href="#">Front End Developer at Google Company</a> <span>2017-2018</span></h2>
-					                  <p>Even the all-powerful Pointing has no control about the blind texts it is an almost unorthographic life One day however a small line of blind text by the name of Lorem Ipsum decided to leave for the far World of Grammar.</p>
-					               </div>
-					            </div>
-					         </article>
-
-					         <article class="timeline-entry animate-box" data-animate-effect="fadeInLeft">
-					            <div class="timeline-entry-inner">
-					               <div class="timeline-icon color-3">
-					                  <i class="icon-pen2"></i>
-					               </div>
-					               <div class="timeline-label">
-					               	<h2><a href="#">System Analyst</a> <span>2017-2018</span></h2>
-					                  <p>Even the all-powerful Pointing has no control about the blind texts it is an almost unorthographic life One day however a small line of blind text by the name of Lorem Ipsum decided to leave for the far World of Grammar.</p>
-					               </div>
-					            </div>
-					         </article>
-
-					         <article class="timeline-entry animate-box" data-animate-effect="fadeInTop">
-					            <div class="timeline-entry-inner">
-					               <div class="timeline-icon color-4">
-					                  <i class="icon-pen2"></i>
-					               </div>
-					               <div class="timeline-label">
-					               	<h2><a href="#">Creative Designer</a> <span>2017-2018</span></h2>
-					                  <p>Even the all-powerful Pointing has no control about the blind texts it is an almost unorthographic life One day however a small line of blind text by the name of Lorem Ipsum decided to leave for the far World of Grammar.</p>
-					               </div>
-					            </div>
-					         </article>
-
-					         <article class="timeline-entry animate-box" data-animate-effect="fadeInLeft">
-					            <div class="timeline-entry-inner">
-					               <div class="timeline-icon color-5">
-					                  <i class="icon-pen2"></i>
-					               </div>
-					               <div class="timeline-label">
-					               	<h2><a href="#">UI/UX Designer at Envato</a> <span>2017-2018</span></h2>
-					                  <p>Even the all-powerful Pointing has no control about the blind texts it is an almost unorthographic life One day however a small line of blind text by the name of Lorem Ipsum decided to leave for the far World of Grammar.</p>
-					               </div>
-					            </div>
-					         </article>
-
-					         <article class="timeline-entry begin animate-box" data-animate-effect="fadeInBottom">
-					            <div class="timeline-entry-inner">
-					               <div class="timeline-icon color-none">
-					               </div>
-					            </div>
-					         </article>
-					      </div>
-					   </div>
-				   </div>
-				</div>
-			</section>
-			-->
-
-
-			<!--
-				
-			<section class="colorlib-work" data-section="work">
-				<div class="colorlib-narrow-content">
-					<div class="row">
-						<div class="col-md-6 col-md-offset-3 col-md-pull-3 animate-box" data-animate-effect="fadeInLeft">
-							<span class="heading-meta">My Work</span>
-							<h2 class="colorlib-heading animate-box">Recent Work</h2>
-						</div>
-					</div>
-					<div class="row row-bottom-padded-sm animate-box" data-animate-effect="fadeInLeft">
-						<div class="col-md-12">
-							<p class="work-menu"><span><a href="#" class="active">Graphic Design</a></span> <span><a href="#">Web Design</a></span> <span><a href="#">Software</a></span> <span><a href="#">Apps</a></span></p>
-						</div>
-					</div>
-					<div class="row">
-						<div class="col-md-6 animate-box" data-animate-effect="fadeInLeft">
-							<div class="project" style="background-image: url(images/img-1.jpg);">
-								<div class="desc">
-									<div class="con">
-										<h3><a href="work.html">Work 01</a></h3>
-										<span>Website</span>
-										<p class="icon">
-											<span><a href="#"><i class="icon-share3"></i></a></span>
-											<span><a href="#"><i class="icon-eye"></i> 100</a></span>
-											<span><a href="#"><i class="icon-heart"></i> 49</a></span>
-										</p>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="col-md-6 animate-box" data-animate-effect="fadeInRight">
-							<div class="project" style="background-image: url(images/img-2.jpg);">
-								<div class="desc">
-									<div class="con">
-										<h3><a href="work.html">Work 02</a></h3>
-										<span>Animation</span>
-										<p class="icon">
-											<span><a href="#"><i class="icon-share3"></i></a></span>
-											<span><a href="#"><i class="icon-eye"></i> 100</a></span>
-											<span><a href="#"><i class="icon-heart"></i> 49</a></span>
-										</p>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="col-md-6 animate-box" data-animate-effect="fadeInTop">
-							<div class="project" style="background-image: url(images/img-3.jpg);">
-								<div class="desc">
-									<div class="con">
-										<h3><a href="work.html">Work 03</a></h3>
-										<span>Illustration</span>
-										<p class="icon">
-											<span><a href="#"><i class="icon-share3"></i></a></span>
-											<span><a href="#"><i class="icon-eye"></i> 100</a></span>
-											<span><a href="#"><i class="icon-heart"></i> 49</a></span>
-										</p>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="col-md-6 animate-box" data-animate-effect="fadeInBottom">
-							<div class="project" style="background-image: url(images/img-4.jpg);">
-								<div class="desc">
-									<div class="con">
-										<h3><a href="work.html">Work 04</a></h3>
-										<span>Application</span>
-										<p class="icon">
-											<span><a href="#"><i class="icon-share3"></i></a></span>
-											<span><a href="#"><i class="icon-eye"></i> 100</a></span>
-											<span><a href="#"><i class="icon-heart"></i> 49</a></span>
-										</p>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="col-md-6 animate-box" data-animate-effect="fadeInLeft">
-							<div class="project" style="background-image: url(images/img-5.jpg);">
-								<div class="desc">
-									<div class="con">
-										<h3><a href="work.html">Work 05</a></h3>
-										<span>Graphic, Logo</span>
-										<p class="icon">
-											<span><a href="#"><i class="icon-share3"></i></a></span>
-											<span><a href="#"><i class="icon-eye"></i> 100</a></span>
-											<span><a href="#"><i class="icon-heart"></i> 49</a></span>
-										</p>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="col-md-6 animate-box" data-animate-effect="fadeInRight">
-							<div class="project" style="background-image: url(images/img-6.jpg);">
-								<div class="desc">
-									<div class="con">
-										<h3><a href="work.html">Work 06</a></h3>
-										<span>Web Design</span>
-										<p class="icon">
-											<span><a href="#"><i class="icon-share3"></i></a></span>
-											<span><a href="#"><i class="icon-eye"></i> 100</a></span>
-											<span><a href="#"><i class="icon-heart"></i> 49</a></span>
-										</p>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="row">
-						<div class="col-md-12 animate-box">
-							<p><a href="#" class="btn btn-primary btn-lg btn-load-more">Load more <i class="icon-reload"></i></a></p>
-						</div>
-					</div>
-				</div>
-			</section>
-			-->
-
-			<!--
-				<section class="colorlib-blog" data-section="blog">
-				<div class="colorlib-narrow-content">
-					<div class="row">
-						<div class="col-md-6 col-md-offset-3 col-md-pull-3 animate-box" data-animate-effect="fadeInLeft">
-							<span class="heading-meta">Read</span>
-							<h2 class="colorlib-heading">Recent Blog</h2>
-						</div>
-					</div>
-					<div class="row">
-						<div class="col-md-4 col-sm-6 animate-box" data-animate-effect="fadeInLeft">
-							<div class="blog-entry">
-								<a href="blog.html" class="blog-img"><img src="images/blog-1.jpg" class="img-responsive" alt="HTML5 Bootstrap Template by colorlib.com"></a>
-								<div class="desc">
-									<span><small>April 14, 2018 </small> | <small> Web Design </small> | <small> <i class="icon-bubble3"></i> 4</small></span>
-									<h3><a href="blog.html">Renovating National Gallery</a></h3>
-									<p>Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean.</p>
-								</div>
-							</div>
-						</div>
-						<div class="col-md-4 col-sm-6 animate-box" data-animate-effect="fadeInRight">
-							<div class="blog-entry">
-								<a href="blog.html" class="blog-img"><img src="images/blog-2.jpg" class="img-responsive" alt="HTML5 Bootstrap Template by colorlib.com"></a>
-								<div class="desc">
-									<span><small>April 14, 2018 </small> | <small> Web Design </small> | <small> <i class="icon-bubble3"></i> 4</small></span>
-									<h3><a href="blog.html">Wordpress for a Beginner</a></h3>
-									<p>Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean.</p>
-								</div>
-							</div>
-						</div>
-						<div class="col-md-4 col-sm-6 animate-box" data-animate-effect="fadeInLeft">
-							<div class="blog-entry">
-								<a href="blog.html" class="blog-img"><img src="images/blog-3.jpg" class="img-responsive" alt="HTML5 Bootstrap Template by colorlib.com"></a>
-								<div class="desc">
-									<span><small>April 14, 2018 </small> | <small> Inspiration </small> | <small> <i class="icon-bubble3"></i> 4</small></span>
-									<h3><a href="blog.html">Make website from scratch</a></h3>
-									<p>Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean.</p>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="row">
-						<div class="col-md-12 animate-box">
-							<p><a href="#" class="btn btn-primary btn-lg btn-load-more">Load more <i class="icon-reload"></i></a></p>
-						</div>
-					</div>
-				</div>
-			</section>
-			-->
-
-			<section class="colorlib-contact" data-section="contact">
-				<div class="colorlib-narrow-content">
-					<div class="row">
-						<div class="col-md-6 col-md-offset-3 col-md-pull-3 animate-box" data-animate-effect="fadeInLeft">
-							<span class="heading-meta">İletişim</span>
-							<h2 class="colorlib-heading">İletişim Yolları</h2>
-						</div>
-					</div>
-					<div class="row">
-						<div class="col-md-5">
-							<div class="colorlib-feature colorlib-feature-sm animate-box" data-animate-effect="fadeInLeft">
-								<div class="colorlib-icon">
-									<i class="fa fa-envelope"></i>
-								</div>
-								<div class="colorlib-text">
-									<p><a href="#">emiryilmaz4144@gmail.com</a></p>
-								</div>
-							</div>
-
-							<div class="colorlib-feature colorlib-feature-sm animate-box" data-animate-effect="fadeInLeft">
-								<div class="colorlib-icon">
-									<i class="fa fa-instagram"></i>
-								</div>
-								<div class="colorlib-text">
-									<p>emir.yilmaz4144</p>
-								</div>
-							</div>
-
-							<div class="colorlib-feature colorlib-feature-sm animate-box" data-animate-effect="fadeInLeft">
-								<div class="colorlib-icon">
-									<i class="fa fa-linkedin"></i>
-								</div>
-								<div class="colorlib-text">
-									<p><a href="tel://">emiryilmaz</a></p>
-								</div>
-							</div>
-						</div>
-						<!--
-							<div class="col-md-7 col-md-push-1">
-							<div class="row">
-								<div class="col-md-10 col-md-offset-1 col-md-pull-1 animate-box" data-animate-effect="fadeInRight">
-									<form action="">
-										<div class="form-group">
-											<input type="text" class="form-control" placeholder="Name">
-										</div>
-										<div class="form-group">
-											<input type="text" class="form-control" placeholder="Email">
-										</div>
-										<div class="form-group">
-											<input type="text" class="form-control" placeholder="Subject">
-										</div>
-										<div class="form-group">
-											<textarea name="" id="message" cols="30" rows="7" class="form-control" placeholder="Message"></textarea>
-										</div>
-										<div class="form-group">
-											<input type="submit" class="btn btn-primary btn-send-message" value="Send Message">
-										</div>
-									</form>
-								</div>
-								
-							</div>
-						</div>
-						-->
-					</div>
-				</div>
-			</section>
-
-		</div><!-- end:colorlib-main -->
-	</div><!-- end:container-wrap -->
-	</div><!-- end:colorlib-page -->
-
-	<!-- jQuery -->
-	<script src="js/jquery.min.js"></script>
-	<!-- jQuery Easing -->
-	<script src="js/jquery.easing.1.3.js"></script>
-	<!-- Bootstrap -->
-	<script src="js/bootstrap.min.js"></script>
-	<!-- Waypoints -->
-	<script src="js/jquery.waypoints.min.js"></script>
-	<!-- Flexslider -->
-	<script src="js/jquery.flexslider-min.js"></script>
-	<!-- Owl carousel -->
-	<script src="js/owl.carousel.min.js"></script>
-	<!-- Counters -->
-	<script src="js/jquery.countTo.js"></script>
-	
-	
-	<!-- MAIN JS -->
-	<script src="js/main.js"></script>
-
-	</body>
+	<footer class="site-footer page-width">
+		<a class="footer-brand" href="#anasayfa">ey<span>.</span></a>
+		<p>Emir Yılmaz · Her gün daha iyiye.</p>
+		<a class="back-to-top" href="#anasayfa">Yukarı dön ↑</a>
+	</footer>
+	<script src="js/portfolio.js?v=5"></script>
+</body>
 </html>
-
