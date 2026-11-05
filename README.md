@@ -1,42 +1,42 @@
 # Emir Yılmaz Portfolyo
 
-GitHub Pages siteyi statik olarak yayınlar; `Bana soru sor` formunun API'si ayrıca Render üzerinde çalışan Node.js sunucusunu kullanır. E-posta doğrulama kodları ve sorular, sahibinin Gmail hesabından SMTP ile gönderilir. Soru metni istenmeyen içerik için OpenAI Moderation API ile kontrol edilir.
+GitHub Pages siteyi statik olarak yayınlar; `Bana soru sor` formunun API'si Render Free üzerinde çalışan Node.js sunucusunu kullanır. Sunucu e-postaları Gmail'e SMTP ile değil, HTTPS üzerinden EmailJS aracılığıyla gönderir. Bu yöntem Render Free ile uyumludur ve alan adı gerektirmez. EmailJS'in ücretsiz planı ayda 200 gönderim isteği içerir; soru formu başarılı bir gönderimde iki e-posta kullandığından yaklaşık 100 soru için yeterlidir.
 
-## Soru formunu canlıya alma
+## Ücretsiz kurulum
 
-1. Google hesabında 2 Adımlı Doğrulamayı etkinleştir. Google Hesabı → Güvenlik → Uygulama şifreleri bölümünden bu uygulama için bir uygulama şifresi oluştur. Normal Google hesap şifreni kullanma. Uygulama şifreleri için 2 Adımlı Doğrulama gerekir ve bazı hesap türlerinde bu seçenek görünmeyebilir.
-2. [OpenAI API anahtarını](https://platform.openai.com/api-keys) oluştur. Kullanılan moderasyon uç noktası OpenAI tarafından ücretsiz sunulur.
-3. GitHub hesabını Render'a bağla ve depodaki `render.yaml` ile bir **Blueprint** oluştur. `main` dalını seç.
-4. Render Blueprint kurulumunda şu iki gizli değişkene değer gir:
-   - `OPENAI_API_KEY`: OpenAI'den oluşturduğun API anahtarı.
-   - `SMTP_APP_PASSWORD`: Google'dan oluşturduğun 16 karakterli uygulama şifresi. Boşluklu gösterilirse boşlukları da yazabilirsin; sunucu temizler.
-5. Render dağıtımı tamamlanınca servis adresini kopyala. `js/contact-config.js` dosyasındaki `PORTFOLIO_CONTACT_API_BASE` değerine ekle. Örnek: `https://emir-yilmaz-portfolio.onrender.com`.
-6. Dosyayı GitHub `main` dalına gönder. GitHub Pages siteyi, Render da API sunucusunu dağıtır.
+1. [EmailJS](https://www.emailjs.com/) hesabı oluştur, **Email Services** bölümünden Gmail hesabını bağla ve test e-postası gönder. Alan adı eklemen gerekmez.
+2. EmailJS'te iki e-posta şablonu oluştur. Her ikisinin **To Email** alanı `{{to_email}}`, **Reply To** alanı `{{reply_to}}` olsun.
+   - **Doğrulama şablonu:** Subject `E-posta doğrulama kodu`; içerikte `{{name}}` ve `{{code}}` alanlarını kullan.
+   - **Soru şablonu:** Subject `Portfolyo üzerinden yeni soru — {{name}}`; içerikte `{{name}}`, `{{email}}` ve `{{question}}` alanlarını kullan.
+3. EmailJS **Account → Security** bölümünden API isteklerinde private key kullanımını aç ve Public Key, Private Key, Service ID ile iki şablonun ID'sini not et.
+4. [OpenAI API anahtarı](https://platform.openai.com/api-keys) oluştur. Soru moderasyon uç noktası ücretsizdir.
+5. GitHub deposundaki `render.yaml` ile Render'da **Blueprint** oluştur veya **New Web Service** seç. `main` dalını, `npm install` build komutunu ve `npm start` start komutunu kullan. Compute plan olarak özellikle **Free** seç; 7 dolarlık Starter planı gerekli değil.
+6. Render servisinin Environment bölümüne `OPENAI_API_KEY`, `EMAILJS_PUBLIC_KEY`, `EMAILJS_PRIVATE_KEY`, `EMAILJS_SERVICE_ID`, `EMAILJS_VERIFICATION_TEMPLATE_ID` ve `EMAILJS_QUESTION_TEMPLATE_ID` değerlerini ekle. Diğer ayarlar `render.yaml` içinde tanımlıdır.
+7. Dağıtım bitince Render servis adresini `js/contact-config.js` içindeki `PORTFOLIO_CONTACT_API_BASE` alanına yaz ve değişikliği GitHub `main` dalına gönder.
 
-`SMTP_USER` ve `CONTACT_TO_EMAIL`, `emiryilmaz4144@gmail.com` olarak ayarlıdır. Doğrulama kodu bu Gmail hesabından soru soran kişiye gönderilir; doğrulanmış soru aynı hesaba iletilir. Gizli değerleri yalnızca Render'ın Environment alanına gir, repoya veya sohbete ekleme. Render kurulum ekranı gizli değişkenleri sormazsa servis içinden **Environment → Add Environment Variable** bölümüne ekleyip yeniden dağıt.
-
-Ücretsiz Render servisi boşta kaldığında uykuya geçebilir ve ilk istekte gecikme yaşanabilir. Gmail, alışılmadık sunucu girişlerini güvenlik nedeniyle engelleyebilir; böyle bir durumda Google Hesabı güvenlik bildirimlerini kontrol et. Gmail SMTP düşük hacimli kişisel kullanım içindir.
+Gizli anahtarları yalnızca Render Environment alanına yaz; repoya veya sohbete ekleme. Render Free 15 dakika istek almazsa uyur ve ilk istek yaklaşık bir dakika gecikebilir. Free hizmetlerin dış SMTP portları kapalıdır; bu uygulama e-postayı EmailJS'in HTTPS API'si üzerinden gönderir.
 
 ## Yerelde çalıştırma
 
-1. Node.js 20 veya üzeri kurulu olmalı.
-2. `.env.example` dosyasını `.env` adıyla kopyala. `OPENAI_API_KEY` ve `SMTP_APP_PASSWORD` değerlerini ekle.
-3. Proje klasöründe `npm install` ve ardından `npm start` çalıştır.
+1. Node.js 20 veya üzerini kur.
+2. `.env.example` dosyasını `.env` adıyla kopyalayıp `OPENAI_API_KEY` ve EmailJS değişkenlerini doldur.
+3. Proje klasöründe `npm install` ve `npm start` çalıştır.
 4. `http://localhost:3000` adresini aç.
 
-Yerelde `js/contact-config.js` boş kalır; arayüz aynı origin'deki yerel API'yi kullanır. `.env` dosyası Git tarafından yok sayılır; anahtarları kaynak dosyalarına koyma.
+Yerelde `js/contact-config.js` boş kalır; arayüz aynı origin'deki API'yi kullanır. `.env` dosyası Git tarafından yok sayılır.
 
 ## Form akışı
 
 1. Sunucu ad, e-posta ve soru alanlarını doğrular, istek hızını sınırlar ve soruyu OpenAI Moderation API ile inceler. Bariz küfür ve spam örüntüleri ayrıca yerel olarak engellenir.
 2. Uygun sorular için kullanıcıya 10 dakika geçerli, tek kullanımlık 6 haneli kod gönderilir.
-3. E-posta kodu doğrulanınca soru `CONTACT_TO_EMAIL` adresine gönderilir. Yanıt adresi, doğrulanmış kullanıcının e-postası olur.
+3. Kod doğrulanınca soru `CONTACT_TO_EMAIL` adresine gönderilir; yanıt adresi doğrulanmış kullanıcının e-postası olur.
 
 ## Belgeler
 
-- [GitHub Pages](https://docs.github.com/en/pages/getting-started-with-github-pages/creating-a-github-pages-site)
+- [Render Free hizmetleri](https://render.com/docs/free)
 - [Render Blueprint kurulumu](https://render.com/docs/infrastructure-as-code)
-- [Render gizli ortam değişkenleri](https://render.com/docs/configure-environment-variables)
-- [Google uygulama şifreleri](https://support.google.com/accounts/answer/185833)
-- [Nodemailer ile Gmail](https://nodemailer.com/guides/using-gmail)
+- [Render ortam değişkenleri](https://render.com/docs/configure-environment-variables)
+- [EmailJS Gmail bağlantısı](https://www.emailjs.com/docs/tutorial/adding-email-service/)
+- [EmailJS REST API](https://www.emailjs.com/docs/rest-api/send/)
+- [EmailJS fiyatlandırması](https://www.emailjs.com/pricing/)
 - [OpenAI Moderation API](https://developers.openai.com/api/docs/guides/moderation)

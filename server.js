@@ -4,7 +4,6 @@ const crypto = require('node:crypto');
 const fs = require('node:fs');
 const http = require('node:http');
 const path = require('node:path');
-const nodemailer = require('nodemailer');
 
 const ROOT = __dirname;
 loadEnvFile();
@@ -12,19 +11,11 @@ loadEnvFile();
 const PORT = Number(process.env.PORT || 3000);
 const CONTACT_TO_EMAIL = (process.env.CONTACT_TO_EMAIL || 'emiryilmaz4144@gmail.com').trim().toLowerCase();
 const OPENAI_MODEL = process.env.OPENAI_MODERATION_MODEL || 'omni-moderation-latest';
-const SMTP_HOST = (process.env.SMTP_HOST || 'smtp.gmail.com').trim();
-const SMTP_PORT = Number(process.env.SMTP_PORT || 465);
-const SMTP_USER = (process.env.SMTP_USER || '').trim();
-const SMTP_APP_PASSWORD = (process.env.SMTP_APP_PASSWORD || '').replace(/\s+/gu, '');
-const smtpTransporter = nodemailer.createTransport({
-	host: SMTP_HOST,
-	port: SMTP_PORT,
-	secure: SMTP_PORT === 465,
-	auth: { user: SMTP_USER, pass: SMTP_APP_PASSWORD },
-	connectionTimeout: 15000,
-	greetingTimeout: 10000,
-	socketTimeout: 20000,
-});
+const EMAILJS_PUBLIC_KEY = (process.env.EMAILJS_PUBLIC_KEY || '').trim();
+const EMAILJS_PRIVATE_KEY = (process.env.EMAILJS_PRIVATE_KEY || '').trim();
+const EMAILJS_SERVICE_ID = (process.env.EMAILJS_SERVICE_ID || '').trim();
+const EMAILJS_VERIFICATION_TEMPLATE_ID = (process.env.EMAILJS_VERIFICATION_TEMPLATE_ID || '').trim();
+const EMAILJS_QUESTION_TEMPLATE_ID = (process.env.EMAILJS_QUESTION_TEMPLATE_ID || '').trim();
 const CONTACT_ALLOWED_ORIGINS = new Set(
 	(process.env.CONTACT_ALLOWED_ORIGINS || '')
 		.split(',')
@@ -214,13 +205,16 @@ function looksLikeSpam(question) {
 
 function contactServicesReady() {
 	const openAiKey = process.env.OPENAI_API_KEY || '';
-	const smtpPassword = SMTP_APP_PASSWORD;
+	const emailJsConfig = [
+		EMAILJS_PUBLIC_KEY,
+		EMAILJS_PRIVATE_KEY,
+		EMAILJS_SERVICE_ID,
+		EMAILJS_VERIFICATION_TEMPLATE_ID,
+		EMAILJS_QUESTION_TEMPLATE_ID,
+	];
 	return Boolean(
 		openAiKey && !openAiKey.startsWith('your-')
-		&& SMTP_USER && SMTP_USER.includes('@')
-		&& smtpPassword && !smtpPassword.startsWith('your-')
-		&& SMTP_HOST === 'smtp.gmail.com'
-		&& [465, 587].includes(SMTP_PORT)
+		&& emailJsConfig.every((value) => value && !value.startsWith('your-'))
 		&& CONTACT_TO_EMAIL,
 	);
 }
@@ -228,9 +222,6 @@ function contactServicesReady() {
 function requireConfiguredServices() {
 	if (!contactServicesReady()) {
 		throw new HttpError(503, 'Soru gönderme sistemi henüz etkin değil. Bana e-posta üzerinden ulaşabilirsin.');
-	}
-	if (/[\r\n]/u.test(SMTP_USER) || /[\r\n]/u.test(SMTP_APP_PASSWORD)) {
-		throw new HttpError(503, 'Soru gönderme sistemi şu anda kullanılamıyor.');
 	}
 }
 
@@ -267,16 +258,25 @@ async function moderateQuestion(question) {
 	return result.results[0].flagged;
 }
 
-async function sendEmail({ to, subject, text, replyTo }) {
+async function sendEmail({ templateId, templateParams }) {
+	let response;
 	try {
-		await smtpTransporter.sendMail({
-			from: SMTP_USER,
-			to,
-			subject,
-			text,
-			...(replyTo ? { replyTo } : {}),
+		response = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({
+				service_id: EMAILJS_SERVICE_ID,
+				template_id: templateId,
+				user_id: EMAILJS_PUBLIC_KEY,
+				accessToken: EMAILJS_PRIVATE_KEY,
+				template_params: templateParams,
+			}),
+			signal: AbortSignal.timeout(12000),
 		});
 	} catch {
+		throw new HttpError(502, 'E-posta gönderilemedi. Biraz sonra tekrar dene.');
+	}
+	if (!response.ok) {
 		throw new HttpError(502, 'E-posta gönderilemedi. Biraz sonra tekrar dene.');
 	}
 }
@@ -371,9 +371,13 @@ async function requestVerificationCode(request, response) {
 
 	try {
 		await sendEmail({
-			to: email,
-			subject: 'Portfolyo soru formu — e-posta doğrulama kodu',
-			text: `Merhaba ${name},\n\nPortfolyo üzerinden soru göndermek için e-posta adresini doğrula.\n\nDoğrulama kodun: ${code}\n\nKod 10 dakika içinde geçerliliğini yitirir. Bu isteği sen başlatmadıysan bu e-postayı yok sayabilirsin.`,
+			templateId: EMAILJS_VERIFICATION_TEMPLATE_ID,
+			templateParams: {
+				to_email: email,
+				name,
+				code,
+				reply_to: CONTACT_TO_EMAIL,
+			},
 		});
 	} catch (error) {
 		challenges.delete(challengeId);
@@ -419,10 +423,14 @@ async function verifyEmailAndSendQuestion(request, response) {
 	challenge.sending = true;
 	try {
 		await sendEmail({
-			to: CONTACT_TO_EMAIL,
-			replyTo: challenge.email,
-			subject: `Portfolyo üzerinden yeni soru — ${challenge.name}`,
-			text: `Yeni bir soru geldi.\n\nAd Soyad: ${challenge.name}\nE-posta: ${challenge.email}\n\nSoru:\n${challenge.question}\n`,
+			templateId: EMAILJS_QUESTION_TEMPLATE_ID,
+			templateParams: {
+				to_email: CONTACT_TO_EMAIL,
+				name: challenge.name,
+				email: challenge.email,
+				reply_to: challenge.email,
+				question: challenge.question,
+			},
 		});
 		challenges.delete(challengeId);
 		sendJson(response, 200, { message: 'E-posta doğrulandı ve soru iletildi.' });
