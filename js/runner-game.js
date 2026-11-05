@@ -63,7 +63,7 @@
 		width = rect.width / unitScale;
 		height = rect.height / unitScale;
 		groundY = height * 0.81;
-		playerX = width * 0.38;
+		playerX = width * (178 / 640);
 		const pixelRatio = Math.min(window.devicePixelRatio || 1, 2);
 		canvas.width = Math.round(rect.width * pixelRatio);
 		canvas.height = Math.round(rect.height * pixelRatio);
@@ -161,13 +161,14 @@
 		}
 	}
 
-	function drawGirl(x, phase, dressColor, time, { catching = false, kissing = false } = {}) {
+	function drawGirl(x, phase, dressColor, time, { catching = false, kissing = false, yOffset = 0 } = {}) {
 		const step = kissing ? 0 : Math.sin(time / (catching ? 34 : 78) + phase);
 		const bob = kissing ? 0 : Math.max(0, Math.sin(time / (catching ? 34 : 78) + phase)) * 2;
 		const headX = x + (kissing ? (x < playerX ? 7 : -7) : 0);
 		const headY = groundY - (kissing ? 55 : 48) + bob;
 
 		context.save();
+		context.translate(0, yOffset);
 		context.lineCap = "round";
 		if (catching) {
 			context.strokeStyle = "rgba(255,255,255,0.72)";
@@ -416,25 +417,27 @@
 		context.translate(-focusX, -focusY);
 		drawBackground(time);
 		if (progress > 0) {
-			drawPlayer(time);
-			farthestFirst.slice(0, -2).forEach((girl) => {
-				drawGirl(playerX - girl.gap, girl.phase, girl.color, time, { catching: girl.catching });
-			});
-			const nearestGirls = [...game.girls].sort((first, second) => first.gap - second.gap).slice(0, 2);
-			nearestGirls.forEach((girl, index) => {
+			const girlsByGap = [...game.girls].sort((first, second) => first.gap - second.gap);
+			const crowdEase = Math.min(1, ease * 1.5);
+			girlsByGap.forEach((girl, index) => {
 				const currentX = playerX - girl.gap;
-				const targetX = playerX + (index === 0 ? -25 : 25);
-				const x = currentX + (targetX - currentX) * ease;
-				drawGirl(x, girl.phase, girl.color, time, { kissing: progress > 0.72 });
+				const targetX = playerX + (index - (girlsByGap.length - 1) / 2) * 16;
+				const x = currentX + (targetX - currentX) * crowdEase;
+				const yOffset = ((index % 3) - 1) * 7 * crowdEase;
+				drawGirl(x, girl.phase, girl.color, time, { kissing: progress > 0.72, yOffset });
 			});
+			drawPlayer(time);
 			if (progress > 0.78) {
 				context.save();
 				context.globalAlpha = Math.min(1, (progress - 0.78) * 4.5);
 				context.font = '15px "Segoe UI Emoji", sans-serif';
 				context.textAlign = "center";
 				context.textBaseline = "middle";
-				context.fillText("💋", playerX - 18, groundY - 62);
-				context.fillText("💋", playerX + 18, groundY - 62);
+				const kissCount = Math.min(girlsByGap.length, 8);
+				for (let index = 0; index < kissCount; index += 1) {
+					const kissX = playerX + (index - (kissCount - 1) / 2) * 21;
+					context.fillText("💋", kissX, groundY - 62 - (index % 2) * 12);
+				}
 				context.restore();
 			}
 		} else {
