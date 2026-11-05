@@ -1,2 +1,2 @@
-// GitHub Pages dışındaki Node.js API adresini yayınlama sonrası buraya ekle.
-window.PORTFOLIO_CONTACT_API_BASE = "";
+// Render üzerinde yayınlanan Node.js API adresi.
+window.PORTFOLIO_CONTACT_API_BASE = "https://emir-yilmaz-portfolio-api.onrender.com";
