@@ -17,7 +17,11 @@ services:
         value: omni-moderation-latest
       - key: OPENAI_API_KEY
         sync: false
-      - key: RESEND_API_KEY
-        sync: false
-      - key: RESEND_FROM_EMAIL
+      - key: SMTP_HOST
+        value: smtp.gmail.com
+      - key: SMTP_PORT
+        value: "465"
+      - key: SMTP_USER
+        value: emiryilmaz4144@gmail.com
+      - key: SMTP_APP_PASSWORD
         sync: false

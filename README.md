@@ -1,43 +1,42 @@
 # Emir Yılmaz Portfolyo
 
-Portfolyo arayüzü GitHub Pages üzerinde statik olarak yayınlanabilir. `Bana soru sor` formunun e-posta doğrulaması ve içerik denetimi için ayrıca Node.js API sunucusu gerekir. GitHub Pages `server.js` dosyasını çalıştırmadığı için API, Render Web Service üzerinde yayınlanır; form arayüzü GitHub Pages'te kalabilir.
+GitHub Pages siteyi statik olarak yayınlar; `Bana soru sor` formunun API'si ayrıca Render üzerinde çalışan Node.js sunucusunu kullanır. E-posta doğrulama kodları ve sorular, sahibinin Gmail hesabından SMTP ile gönderilir. Soru metni istenmeyen içerik için OpenAI Moderation API ile kontrol edilir.
 
 ## Soru formunu canlıya alma
 
-1. GitHub hesabını Render'a bağla ve bu depoyu seçerek yeni bir **Blueprint** oluştur. Depodaki `render.yaml`, Node.js web service ayarlarını hazırlar.
-2. Blueprint kurulumu sırasında şu üç gizli değişkeni Render'a gir:
-   - `OPENAI_API_KEY`
-   - `RESEND_API_KEY`
-   - `RESEND_FROM_EMAIL`
-3. `RESEND_FROM_EMAIL`, Resend hesabında doğrulanmış bir gönderici adresi olmalı. Soru e-postaları `CONTACT_TO_EMAIL` ayarındaki adrese gider.
-4. Render dağıtımı tamamlandığında servis adresini kopyala. `js/contact-config.js` dosyasındaki `PORTFOLIO_CONTACT_API_BASE` değerine bu adresi yaz. Örnek: `https://emir-yilmaz-portfolio.onrender.com`.
-5. Bu dosya değişikliğini `main` dalına gönder. GitHub Pages arayüzü yeni API adresini kullanır; Render da `main` dalındaki sunucu kodunu otomatik dağıtır.
+1. Google hesabında 2 Adımlı Doğrulamayı etkinleştir. Google Hesabı → Güvenlik → Uygulama şifreleri bölümünden bu uygulama için bir uygulama şifresi oluştur. Normal Google hesap şifreni kullanma. Uygulama şifreleri için 2 Adımlı Doğrulama gerekir ve bazı hesap türlerinde bu seçenek görünmeyebilir.
+2. [OpenAI API anahtarını](https://platform.openai.com/api-keys) oluştur. Kullanılan moderasyon uç noktası OpenAI tarafından ücretsiz sunulur.
+3. GitHub hesabını Render'a bağla ve depodaki `render.yaml` ile bir **Blueprint** oluştur. `main` dalını seç.
+4. Render Blueprint kurulumunda şu iki gizli değişkene değer gir:
+   - `OPENAI_API_KEY`: OpenAI'den oluşturduğun API anahtarı.
+   - `SMTP_APP_PASSWORD`: Google'dan oluşturduğun 16 karakterli uygulama şifresi. Boşluklu gösterilirse boşlukları da yazabilirsin; sunucu temizler.
+5. Render dağıtımı tamamlanınca servis adresini kopyala. `js/contact-config.js` dosyasındaki `PORTFOLIO_CONTACT_API_BASE` değerine ekle. Örnek: `https://emir-yilmaz-portfolio.onrender.com`.
+6. Dosyayı GitHub `main` dalına gönder. GitHub Pages siteyi, Render da API sunucusunu dağıtır.
 
-`render.yaml`, GitHub Pages adresini API çağrısı yapmaya yetkili kaynak olarak ayarlar. Siteyi özel bir alan adında yayınlarsan Render'daki `CONTACT_ALLOWED_ORIGINS` değişkenine o adresi de ekle. API anahtarlarını GitHub'a, `index.html` veya JavaScript dosyalarına koyma; yalnızca Render gizli değişkenlerinde tut.
+`SMTP_USER` ve `CONTACT_TO_EMAIL`, `emiryilmaz4144@gmail.com` olarak ayarlıdır. Doğrulama kodu bu Gmail hesabından soru soran kişiye gönderilir; doğrulanmış soru aynı hesaba iletilir. Gizli değerleri yalnızca Render'ın Environment alanına gir, repoya veya sohbete ekleme. Render kurulum ekranı gizli değişkenleri sormazsa servis içinden **Environment → Add Environment Variable** bölümüne ekleyip yeniden dağıt.
 
-Render'ın ücretsiz Web Service planı 15 dakika boşta kaldığında uykuya geçebilir; ilk isteğin yanıtı gecikebilir. Doğrulama oturumları şu anda sunucu belleğinde tutulduğu için sunucu yeniden başlarsa bekleyen kodlar geçersiz olur. Daha yüksek erişilebilirlik veya birden fazla sunucu örneği için doğrulama kodları ve hız limitleri ortak, kalıcı bir depoya taşınmalıdır.
+Ücretsiz Render servisi boşta kaldığında uykuya geçebilir ve ilk istekte gecikme yaşanabilir. Gmail, alışılmadık sunucu girişlerini güvenlik nedeniyle engelleyebilir; böyle bir durumda Google Hesabı güvenlik bildirimlerini kontrol et. Gmail SMTP düşük hacimli kişisel kullanım içindir.
 
 ## Yerelde çalıştırma
 
 1. Node.js 20 veya üzeri kurulu olmalı.
-2. `.env.example` dosyasını `.env` adıyla kopyala ve `OPENAI_API_KEY`, `RESEND_API_KEY`, `RESEND_FROM_EMAIL` değerlerini ekle.
-3. Proje klasöründe `npm start` çalıştır.
+2. `.env.example` dosyasını `.env` adıyla kopyala. `OPENAI_API_KEY` ve `SMTP_APP_PASSWORD` değerlerini ekle.
+3. Proje klasöründe `npm install` ve ardından `npm start` çalıştır.
 4. `http://localhost:3000` adresini aç.
 
-Yerelde `js/contact-config.js` boş kalır; arayüz aynı origin'deki yerel API'yi kullanır. `CONTACT_ALLOWED_ORIGINS` yerelde GitHub Pages adresini belirtir; `TRUST_PROXY` yerel geliştirmede `false` kalır.
+Yerelde `js/contact-config.js` boş kalır; arayüz aynı origin'deki yerel API'yi kullanır. `.env` dosyası Git tarafından yok sayılır; anahtarları kaynak dosyalarına koyma.
 
 ## Form akışı
 
 1. Sunucu ad, e-posta ve soru alanlarını doğrular, istek hızını sınırlar ve soruyu OpenAI Moderation API ile inceler. Bariz küfür ve spam örüntüleri ayrıca yerel olarak engellenir.
-2. Uygun sorular için kullanıcıya 10 dakika geçerli, tek kullanımlık 6 haneli kod gönderilir. Kod doğrulanmadan soru sahibine e-posta iletilmez.
-3. Kod doğrulandığında soru `CONTACT_TO_EMAIL` adresine gönderilir. Yanıt adresi, doğrulanmış kullanıcının e-posta adresi olur.
+2. Uygun sorular için kullanıcıya 10 dakika geçerli, tek kullanımlık 6 haneli kod gönderilir.
+3. E-posta kodu doğrulanınca soru `CONTACT_TO_EMAIL` adresine gönderilir. Yanıt adresi, doğrulanmış kullanıcının e-postası olur.
 
-E-posta doğrulaması, kullanıcının o posta kutusuna erişebildiğini gösterir; kimliğini veya adresin kalıcı olacağını kanıtlamaz.
-
-## Servis belgeleri
+## Belgeler
 
 - [GitHub Pages](https://docs.github.com/en/pages/getting-started-with-github-pages/creating-a-github-pages-site)
-- [Render Web Services](https://render.com/docs/web-services)
-- [Render ortam değişkenleri](https://render.com/docs/configure-environment-variables)
-- [OpenAI Moderation API](https://platform.openai.com/docs/guides/moderation)
-- [Resend e-posta gönderme API'si](https://resend.com/docs/api-reference/emails/send-email)
+- [Render Blueprint kurulumu](https://render.com/docs/infrastructure-as-code)
+- [Render gizli ortam değişkenleri](https://render.com/docs/configure-environment-variables)
+- [Google uygulama şifreleri](https://support.google.com/accounts/answer/185833)
+- [Nodemailer ile Gmail](https://nodemailer.com/guides/using-gmail)
+- [OpenAI Moderation API](https://developers.openai.com/api/docs/guides/moderation)

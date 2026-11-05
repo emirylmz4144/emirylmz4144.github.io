@@ -4,6 +4,7 @@ const crypto = require('node:crypto');
 const fs = require('node:fs');
 const http = require('node:http');
 const path = require('node:path');
+const nodemailer = require('nodemailer');
 
 const ROOT = __dirname;
 loadEnvFile();
@@ -11,6 +12,19 @@ loadEnvFile();
 const PORT = Number(process.env.PORT || 3000);
 const CONTACT_TO_EMAIL = (process.env.CONTACT_TO_EMAIL || 'emiryilmaz4144@gmail.com').trim().toLowerCase();
 const OPENAI_MODEL = process.env.OPENAI_MODERATION_MODEL || 'omni-moderation-latest';
+const SMTP_HOST = (process.env.SMTP_HOST || 'smtp.gmail.com').trim();
+const SMTP_PORT = Number(process.env.SMTP_PORT || 465);
+const SMTP_USER = (process.env.SMTP_USER || '').trim();
+const SMTP_APP_PASSWORD = (process.env.SMTP_APP_PASSWORD || '').replace(/\s+/gu, '');
+const smtpTransporter = nodemailer.createTransport({
+	host: SMTP_HOST,
+	port: SMTP_PORT,
+	secure: SMTP_PORT === 465,
+	auth: { user: SMTP_USER, pass: SMTP_APP_PASSWORD },
+	connectionTimeout: 15000,
+	greetingTimeout: 10000,
+	socketTimeout: 20000,
+});
 const CONTACT_ALLOWED_ORIGINS = new Set(
 	(process.env.CONTACT_ALLOWED_ORIGINS || '')
 		.split(',')
@@ -200,12 +214,13 @@ function looksLikeSpam(question) {
 
 function contactServicesReady() {
 	const openAiKey = process.env.OPENAI_API_KEY || '';
-	const resendKey = process.env.RESEND_API_KEY || '';
-	const fromEmail = process.env.RESEND_FROM_EMAIL || '';
+	const smtpPassword = SMTP_APP_PASSWORD;
 	return Boolean(
 		openAiKey && !openAiKey.startsWith('your-')
-		&& resendKey && !resendKey.startsWith('your-')
-		&& fromEmail && !fromEmail.includes('your-verified-domain.com')
+		&& SMTP_USER && SMTP_USER.includes('@')
+		&& smtpPassword && !smtpPassword.startsWith('your-')
+		&& SMTP_HOST === 'smtp.gmail.com'
+		&& [465, 587].includes(SMTP_PORT)
 		&& CONTACT_TO_EMAIL,
 	);
 }
@@ -214,7 +229,7 @@ function requireConfiguredServices() {
 	if (!contactServicesReady()) {
 		throw new HttpError(503, 'Soru gönderme sistemi henüz etkin değil. Bana e-posta üzerinden ulaşabilirsin.');
 	}
-	if (/[\r\n]/u.test(process.env.RESEND_FROM_EMAIL)) {
+	if (/[\r\n]/u.test(SMTP_USER) || /[\r\n]/u.test(SMTP_APP_PASSWORD)) {
 		throw new HttpError(503, 'Soru gönderme sistemi şu anda kullanılamıyor.');
 	}
 }
@@ -252,30 +267,16 @@ async function moderateQuestion(question) {
 	return result.results[0].flagged;
 }
 
-async function sendEmail({ to, subject, text, replyTo, idempotencyKey }) {
-	let response;
+async function sendEmail({ to, subject, text, replyTo }) {
 	try {
-		response = await fetch('https://api.resend.com/emails', {
-			method: 'POST',
-			headers: {
-				'Authorization': `Bearer ${process.env.RESEND_API_KEY}`,
-				'Content-Type': 'application/json',
-				'Idempotency-Key': idempotencyKey,
-			},
-			body: JSON.stringify({
-				from: process.env.RESEND_FROM_EMAIL,
-				to: [to],
-				subject,
-				text,
-				...(replyTo ? { reply_to: replyTo } : {}),
-			}),
-			signal: AbortSignal.timeout(15000),
+		await smtpTransporter.sendMail({
+			from: SMTP_USER,
+			to,
+			subject,
+			text,
+			...(replyTo ? { replyTo } : {}),
 		});
 	} catch {
-		throw new HttpError(502, 'E-posta gönderilemedi. Biraz sonra tekrar dene.');
-	}
-
-	if (!response.ok) {
 		throw new HttpError(502, 'E-posta gönderilemedi. Biraz sonra tekrar dene.');
 	}
 }
@@ -373,7 +374,6 @@ async function requestVerificationCode(request, response) {
 			to: email,
 			subject: 'Portfolyo soru formu — e-posta doğrulama kodu',
 			text: `Merhaba ${name},\n\nPortfolyo üzerinden soru göndermek için e-posta adresini doğrula.\n\nDoğrulama kodun: ${code}\n\nKod 10 dakika içinde geçerliliğini yitirir. Bu isteği sen başlatmadıysan bu e-postayı yok sayabilirsin.`,
-			idempotencyKey: `portfolio-verification/${challengeId}`,
 		});
 	} catch (error) {
 		challenges.delete(challengeId);
@@ -423,7 +423,6 @@ async function verifyEmailAndSendQuestion(request, response) {
 			replyTo: challenge.email,
 			subject: `Portfolyo üzerinden yeni soru — ${challenge.name}`,
 			text: `Yeni bir soru geldi.\n\nAd Soyad: ${challenge.name}\nE-posta: ${challenge.email}\n\nSoru:\n${challenge.question}\n`,
-			idempotencyKey: `portfolio-question/${challenge.id}`,
 		});
 		challenges.delete(challengeId);
 		sendJson(response, 200, { message: 'E-posta doğrulandı ve soru iletildi.' });
