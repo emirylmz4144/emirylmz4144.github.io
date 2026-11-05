@@ -13,9 +13,10 @@
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 	<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-	<link rel="stylesheet" href="css/portfolio.css?v=6">
+	<link rel="stylesheet" href="css/portfolio.css?v=7">
 </head>
 <body>
+	<div class="scroll-progress" aria-hidden="true"><span id="scroll-progress-fill"></span></div>
 	<a class="skip-link" href="#icerik">İçeriğe geç</a>
 	<header class="site-header">
 		<div class="header-inner">
@@ -194,7 +195,32 @@
 		<p>Emir Yılmaz · Her gün daha iyiye.</p>
 		<a class="back-to-top" href="#anasayfa">Yukarı dön ↑</a>
 	</footer>
+
+	<div class="runner-game" id="runner-game">
+		<button class="runner-launch" id="runner-toggle" type="button" aria-expanded="false" aria-controls="runner-panel">
+			<span class="runner-launch-icon" aria-hidden="true">🏃🏻‍♂️</span>
+			<span class="runner-launch-copy"><strong>Oyun oyna</strong><small>Mini kaçış oyunu</small></span>
+			<span class="runner-launch-arrow" aria-hidden="true">↗</span>
+		</button>
+		<section class="runner-panel" id="runner-panel" aria-labelledby="runner-title" hidden>
+			<div class="runner-panel-head">
+				<div><p class="runner-eyebrow">MİNİ OYUN</p><h2 id="runner-title">Emir'den kaçış!</h2></div>
+				<button class="runner-close" id="runner-close" type="button" aria-label="Oyunu kapat">×</button>
+			</div>
+			<div class="runner-stage">
+				<canvas id="runner-canvas" width="640" height="240" data-face="images/himself/IMG_20231111_235400_375.jpg" role="img" aria-label="Emir engellerden zıplarken iki kız onu kalplerle takip ediyor"></canvas>
+				<div class="runner-start-screen" id="runner-start-screen">
+					<p id="runner-message">Engellerden kaç, kalpleri geride bırak! 💕</p>
+					<button class="runner-start" id="runner-start" type="button">Oyuna başla <span aria-hidden="true">→</span></button>
+				</div>
+			</div>
+			<div class="runner-panel-foot"><span>Boşluk / ↑ / dokun: zıpla</span><strong id="runner-score">0 m</strong></div>
+		</section>
+	</div>
+
+	<script src="js/visual-polish.js?v=1"></script>
 	<script src="js/contact-config.js?v=1"></script>
 	<script src="js/portfolio.js?v=7"></script>
+	<script src="js/runner-game.js?v=1"></script>
 </body>
 </html>
