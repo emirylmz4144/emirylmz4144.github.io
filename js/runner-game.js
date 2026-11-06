@@ -543,9 +543,20 @@
 			gap,
 			targetGap: farthestGap + 58,
 			catching: true,
+			rushing: false,
 			phase: Math.random() * Math.PI * 2,
 			color: dressColors[game.girls.length % dressColors.length],
 			hairColor: hairColors[game.girls.length % hairColors.length],
+		});
+	}
+
+	function closeFollowerGaps() {
+		game.girls.sort((first, second) => first.gap - second.gap);
+		game.girls.forEach((girl, index) => {
+			const targetGap = 72 + index * 48;
+			girl.targetGap = Math.min(girl.gap, targetGap);
+			girl.catching = girl.gap > targetGap + 1;
+			girl.rushing = girl.catching;
 		});
 	}
 
@@ -671,8 +682,11 @@
 
 		game.girls.forEach((girl) => {
 			if (!girl.catching) return;
-			girl.gap = Math.max(girl.targetGap, girl.gap - 155 * delta);
-			if (girl.gap <= girl.targetGap) girl.catching = false;
+			girl.gap = Math.max(girl.targetGap, girl.gap - (girl.rushing ? 310 : 155) * delta);
+			if (girl.gap <= girl.targetGap) {
+				girl.catching = false;
+				girl.rushing = false;
+			}
 		});
 
 		if (game.jumpVelocity > 0 || game.jumpHeight > 0) {
@@ -758,6 +772,7 @@
 			});
 			if (girlIndex >= 0) {
 				const girl = game.girls.splice(girlIndex, 1)[0];
+				closeFollowerGaps();
 				const girlX = playerX - girl.gap;
 				game.flungGirls.push({
 					x: girlX,
