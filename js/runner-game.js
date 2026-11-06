@@ -11,6 +11,7 @@
 	const bombLabel = document.querySelector("#runner-bombs");
 	const bombButton = document.querySelector("#runner-bomb-button");
 	const girlCountLabel = document.querySelector("#runner-girl-count");
+	const foodCountLabel = document.querySelector("#runner-food-count");
 	if (!widget || !toggle || !panel || !closeButton || !canvas || !startButton) return;
 
 	const context = canvas.getContext("2d");
@@ -24,6 +25,9 @@
 	const playerFace = new Image();
 	playerFace.src = canvas.dataset.face;
 	const dressColors = ["#d997a7", "#a9a2d5", "#e0a96c", "#83b8ae", "#d78579"];
+	const hairColors = ["#5b352b", "#d5a348", "#30231f", "#ad6546", "#78503a"];
+	let keyboardDuck = false;
+	let pointerDuckId = null;
 
 	const game = {
 		open: false,
@@ -42,14 +46,18 @@
 		obstacles: [],
 		balloons: [],
 		bombs: [],
+		foods: [],
+		flungGirls: [],
 		bombCount: 0,
+		foodPoints: 0,
 		effects: [],
 		girls: [
-			{ gap: 72, targetGap: 72, catching: false, phase: 0.4, color: dressColors[0] },
-			{ gap: 120, targetGap: 120, catching: false, phase: 1.8, color: dressColors[1] },
+			{ gap: 72, targetGap: 72, catching: false, phase: 0.4, color: dressColors[0], hairColor: hairColors[0] },
+			{ gap: 120, targetGap: 120, catching: false, phase: 1.8, color: dressColors[1], hairColor: hairColors[1] },
 		],
 		nextGirlAt: 50,
 		nextBalloonAt: 60,
+		nextFoodAt: 100,
 		groundShift: 0,
 	};
 
@@ -74,6 +82,8 @@
 			game.obstacles.forEach((item) => { item.x *= ratio; });
 			game.balloons.forEach((item) => { item.x *= ratio; });
 			game.bombs.forEach((item) => { item.x *= ratio; });
+			game.foods.forEach((item) => { item.x *= ratio; });
+			game.flungGirls.forEach((item) => { item.x *= ratio; });
 		}
 		return true;
 	}
@@ -161,7 +171,7 @@
 		}
 	}
 
-	function drawGirl(x, phase, dressColor, time, { catching = false, kissing = false, yOffset = 0 } = {}) {
+	function drawGirl(x, phase, dressColor, time, { catching = false, kissing = false, yOffset = 0, hairColor = hairColors[0] } = {}) {
 		const step = kissing ? 0 : Math.sin(time / (catching ? 34 : 78) + phase);
 		const bob = kissing ? 0 : Math.max(0, Math.sin(time / (catching ? 34 : 78) + phase)) * 2;
 		const headX = x + (kissing ? (x < playerX ? 7 : -7) : 0);
@@ -207,7 +217,7 @@
 		context.lineTo(x + 13 + step * 3, groundY - 26 + bob);
 		context.stroke();
 
-		context.fillStyle = "#795348";
+		context.fillStyle = hairColor;
 		context.beginPath();
 		context.ellipse(headX, headY, 9, 10, 0, 0, Math.PI * 2);
 		context.fill();
@@ -215,7 +225,7 @@
 		context.beginPath();
 		context.arc(headX + (kissing ? (x < playerX ? 1 : -1) : 1), headY + 1, 6.5, 0, Math.PI * 2);
 		context.fill();
-		context.fillStyle = "#795348";
+		context.fillStyle = hairColor;
 		context.beginPath();
 		context.arc(headX - 1, headY - 5, 8, Math.PI, Math.PI * 2);
 		context.fill();
@@ -344,26 +354,42 @@
 		context.strokeStyle = "rgba(91, 103, 142, 0.7)";
 		context.lineWidth = 1.2;
 		context.beginPath();
-		context.moveTo(balloon.x, y + 14);
-		context.quadraticCurveTo(balloon.x + 5, y + 22, balloon.x - 1, y + 29);
+		context.moveTo(balloon.x, y + 19);
+		context.quadraticCurveTo(balloon.x + 7, y + 29, balloon.x - 1, y + 37);
 		context.stroke();
 
-		const shine = context.createRadialGradient(balloon.x - 5, y - 6, 1, balloon.x, y, 17);
+		const shine = context.createRadialGradient(balloon.x - 7, y - 9, 1, balloon.x, y, 23);
 		shine.addColorStop(0, "#f4f1ff");
 		shine.addColorStop(0.35, "#aeb7f2");
 		shine.addColorStop(1, "#6978d7");
 		context.fillStyle = shine;
 		context.beginPath();
-		context.ellipse(balloon.x, y, 13, 17, -0.12, 0, Math.PI * 2);
+		context.ellipse(balloon.x, y, 18, 23, -0.12, 0, Math.PI * 2);
 		context.fill();
 		context.fillStyle = "rgba(255,255,255,0.82)";
 		context.beginPath();
-		context.ellipse(balloon.x - 5, y - 6, 2.6, 4.2, -0.35, 0, Math.PI * 2);
+		context.ellipse(balloon.x - 7, y - 9, 3.3, 5.3, -0.35, 0, Math.PI * 2);
 		context.fill();
-		context.font = '10px "Segoe UI Emoji", sans-serif';
+		context.font = '14px "Segoe UI Emoji", sans-serif';
 		context.textAlign = "center";
 		context.textBaseline = "middle";
 		context.fillText("💣", balloon.x + 1, y + 2);
+	}
+
+	function drawFood(food, time) {
+		const bob = Math.sin(time / 190 + food.phase) * 2;
+		const y = groundY - 15 + bob;
+		const glow = context.createRadialGradient(food.x, y, 1, food.x, y, 24);
+		glow.addColorStop(0, "rgba(255, 236, 176, 0.8)");
+		glow.addColorStop(1, "rgba(255, 236, 176, 0)");
+		context.fillStyle = glow;
+		context.beginPath();
+		context.arc(food.x, y, 24, 0, Math.PI * 2);
+		context.fill();
+		context.font = '25px "Segoe UI Emoji", sans-serif';
+		context.textAlign = "center";
+		context.textBaseline = "middle";
+		context.fillText("🍓", food.x, y - 1);
 	}
 
 	function drawBomb(bomb, time) {
@@ -393,13 +419,44 @@
 
 	function drawEffects() {
 		game.effects.forEach((effect) => {
+			const progress = 1 - effect.life / effect.duration;
 			context.save();
-			context.globalAlpha = Math.max(0, effect.life / 0.5);
-			context.font = '20px "Segoe UI Emoji", sans-serif';
+			context.globalAlpha = Math.max(0, effect.life / effect.duration);
+			context.font = effect.type === "food" ? '18px "Segoe UI Emoji", sans-serif' : '20px "Segoe UI Emoji", sans-serif';
 			context.textAlign = "center";
 			context.textBaseline = "middle";
-			context.fillText("💨", effect.x, effect.y - (0.5 - effect.life) * 38);
+			const icon = effect.type === "food" ? "+1 ✨" : effect.type === "pickup" ? "✨" : "💥";
+			context.fillText(icon, effect.x, effect.y - progress * 38);
 			context.restore();
+		});
+	}
+
+	function drawFlungGirls(time) {
+		game.flungGirls.forEach((flung) => {
+			const progress = Math.min(1, flung.age / 0.95);
+			const x = flung.x - progress * 88;
+			const lift = Math.sin(progress * Math.PI) * 82;
+			const scale = 1 - progress * 0.66;
+			context.save();
+			context.globalAlpha = 1 - progress * 0.88;
+			context.translate(x, groundY - 26);
+			context.rotate(progress * 5.2 * flung.spin);
+			context.scale(scale, scale);
+			context.translate(-x, -(groundY - 26));
+			drawGirl(x, flung.phase, flung.color, time, {
+				yOffset: -lift - progress * 14,
+				hairColor: flung.hairColor,
+			});
+			context.restore();
+			if (progress < 0.82) {
+				context.save();
+				context.globalAlpha = 1 - progress / 0.82;
+				context.font = '18px "Segoe UI Emoji", sans-serif';
+				context.textAlign = "center";
+				context.textBaseline = "middle";
+				context.fillText("💫", x, groundY - 46 - lift);
+				context.restore();
+			}
 		});
 	}
 
@@ -424,7 +481,7 @@
 				const targetX = playerX + (index - (girlsByGap.length - 1) / 2) * 16;
 				const x = currentX + (targetX - currentX) * crowdEase;
 				const yOffset = ((index % 3) - 1) * 7 * crowdEase;
-				drawGirl(x, girl.phase, girl.color, time, { kissing: progress > 0.72, yOffset });
+				drawGirl(x, girl.phase, girl.color, time, { kissing: progress > 0.72, yOffset, hairColor: girl.hairColor });
 			});
 			drawPlayer(time);
 			if (progress > 0.78) {
@@ -442,13 +499,15 @@
 			}
 		} else {
 			farthestFirst.forEach((girl) => {
-				drawGirl(playerX - girl.gap, girl.phase, girl.color, time, { catching: girl.catching });
+				drawGirl(playerX - girl.gap, girl.phase, girl.color, time, { catching: girl.catching, hairColor: girl.hairColor });
 			});
 			game.obstacles.forEach(drawObstacle);
 			game.balloons.forEach((balloon) => drawBalloon(balloon, time));
+			game.foods.forEach((food) => drawFood(food, time));
 			game.bombs.forEach((bomb) => drawBomb(bomb, time));
 			drawEffects();
 			drawPlayer(time);
+			drawFlungGirls(time);
 		}
 		context.restore();
 	}
@@ -462,15 +521,17 @@
 		updateScore();
 		const girlValue = `💕 ${game.girls.length}`;
 		const bombValue = String(game.bombCount);
+		const foodValue = `🍓 ${game.foodPoints}`;
 		if (girlCountLabel && girlCountLabel.textContent !== girlValue) girlCountLabel.textContent = girlValue;
 		if (bombLabel && bombLabel.textContent !== bombValue) bombLabel.textContent = bombValue;
+		if (foodCountLabel && foodCountLabel.textContent !== foodValue) foodCountLabel.textContent = foodValue;
 		if (bombButton) bombButton.disabled = !game.running || game.captured || game.bombCount < 1;
 	}
 
 	function resetGirls() {
 		game.girls = [
-			{ gap: 72, targetGap: 72, catching: false, phase: 0.4, color: dressColors[0] },
-			{ gap: 120, targetGap: 120, catching: false, phase: 1.8, color: dressColors[1] },
+			{ gap: 72, targetGap: 72, catching: false, phase: 0.4, color: dressColors[0], hairColor: hairColors[0] },
+			{ gap: 120, targetGap: 120, catching: false, phase: 1.8, color: dressColors[1], hairColor: hairColors[1] },
 		];
 	}
 
@@ -484,6 +545,7 @@
 			catching: true,
 			phase: Math.random() * Math.PI * 2,
 			color: dressColors[game.girls.length % dressColors.length],
+			hairColor: hairColors[game.girls.length % hairColors.length],
 		});
 	}
 
@@ -495,7 +557,13 @@
 	}
 
 	function setDucking(ducking) {
-		game.ducking = Boolean(ducking) && game.running && game.jumpHeight < 3;
+		keyboardDuck = Boolean(ducking);
+		game.ducking = Boolean(game.running && (keyboardDuck || pointerDuckId !== null));
+	}
+
+	function setPointerDucking(pointerId) {
+		pointerDuckId = pointerId;
+		game.ducking = Boolean(game.running && (keyboardDuck || pointerDuckId !== null));
 	}
 
 	function setGameSpeed() {
@@ -523,6 +591,8 @@
 		game.captureProgress = 0;
 		game.jumpHeight = 0;
 		game.jumpVelocity = 0;
+		keyboardDuck = false;
+		pointerDuckId = null;
 		game.ducking = false;
 		game.obstacles = [];
 		game.spawnIn = Infinity;
@@ -539,6 +609,8 @@
 		game.spawnIn = 0.8;
 		game.jumpHeight = 0;
 		game.jumpVelocity = 0;
+		keyboardDuck = false;
+		pointerDuckId = null;
 		game.ducking = false;
 		game.captured = false;
 		game.captureProgress = 0;
@@ -546,10 +618,14 @@
 		game.obstacles = [];
 		game.balloons = [];
 		game.bombs = [];
+		game.foods = [];
+		game.flungGirls = [];
 		game.effects = [];
 		resetGirls();
 		game.nextGirlAt = 50;
 		game.nextBalloonAt = 60;
+		game.nextFoodAt = 100;
+		game.foodPoints = 0;
 		game.groundShift = 0;
 		updateHud();
 		startScreen.hidden = true;
@@ -558,7 +634,8 @@
 
 	function jump() {
 		if (!game.running || game.jumpHeight > 1) return;
-		game.ducking = false;
+		keyboardDuck = false;
+		game.ducking = Boolean(pointerDuckId !== null);
 		game.jumpVelocity = 535;
 	}
 
@@ -586,6 +663,10 @@
 				phase: Math.random() * Math.PI * 2,
 			});
 			game.nextBalloonAt += 60;
+		}
+		while (game.distance >= game.nextFoodAt) {
+			game.foods.push({ x: width + 24, phase: Math.random() * Math.PI * 2 });
+			game.nextFoodAt += 100;
 		}
 
 		game.girls.forEach((girl) => {
@@ -631,16 +712,36 @@
 			const balloonY = balloon.y + Math.sin(game.elapsed * 1000 / 190 + balloon.phase) * 4;
 			const playerCenterY = groundY - game.jumpHeight - (game.ducking ? 28 : 46);
 			const collected = !game.ducking
-				&& game.jumpHeight > 14
-				&& Math.abs(playerCenterY - balloonY) < 38
-				&& balloon.previousX > playerX - 22
-				&& balloon.x < playerX + 22;
+				&& game.jumpHeight > 8
+				&& Math.abs(playerCenterY - balloonY) < 50
+				&& balloon.previousX > playerX - 34
+				&& balloon.x < playerX + 34;
 			if (collected) {
 				game.bombCount += 1;
-				game.effects.push({ x: playerX, y: balloon.y, life: 0.5 });
+				game.effects.push({ x: playerX, y: balloon.y, life: 0.55, duration: 0.55, type: "pickup" });
 				game.balloons.splice(index, 1);
 			} else if (balloon.x < -30) {
 				game.balloons.splice(index, 1);
+			}
+		}
+
+		game.foods.forEach((food) => {
+			food.previousX = food.x;
+			food.x -= game.speed * delta;
+		});
+		for (let index = game.foods.length - 1; index >= 0; index -= 1) {
+			const food = game.foods[index];
+			const walking = game.jumpHeight < 3 && !game.ducking;
+			const collected = walking
+				&& food.previousX > playerX - 24
+				&& food.x < playerX + 24;
+			if (collected) {
+				game.foodPoints += 1;
+				if (game.foodPoints % 5 === 0) game.bombCount += 1;
+				game.effects.push({ x: playerX, y: groundY - 24, life: 0.75, duration: 0.75, type: "food" });
+				game.foods.splice(index, 1);
+			} else if (food.x < -30) {
+				game.foods.splice(index, 1);
 			}
 		}
 
@@ -657,26 +758,40 @@
 			});
 			if (girlIndex >= 0) {
 				const girl = game.girls.splice(girlIndex, 1)[0];
-				game.effects.push({ x: playerX - girl.gap, y: groundY - 35, life: 0.5 });
+				const girlX = playerX - girl.gap;
+				game.flungGirls.push({
+					x: girlX,
+					age: 0,
+					spin: Math.random() > 0.5 ? 1 : -1,
+					phase: girl.phase,
+					color: girl.color,
+					hairColor: girl.hairColor,
+				});
+				game.effects.push({ x: girlX, y: groundY - 35, life: 0.42, duration: 0.42, type: "blast" });
 				game.bombs.splice(index, 1);
 			} else if (bomb.x < -30) {
 				game.bombs.splice(index, 1);
 			}
 		}
 
+		game.flungGirls.forEach((girl) => { girl.age += delta; });
+		game.flungGirls = game.flungGirls.filter((girl) => girl.age < 0.95);
 		game.effects.forEach((effect) => { effect.life -= delta; });
 		game.effects = game.effects.filter((effect) => effect.life > 0);
 
-		const playerTop = groundY - game.jumpHeight - (game.ducking ? 50 : 84);
+		const isDucking = game.ducking && game.jumpHeight < 3;
+		const playerTop = groundY - game.jumpHeight - (isDucking ? 50 : 84);
 		const playerBottom = groundY - game.jumpHeight - 2;
 		const collided = game.obstacles.some((obstacle) => {
-			const obstacleTop = groundY - obstacle.height - (obstacle.type === "low" ? 54 : 0);
-			const obstacleBottom = obstacleTop + obstacle.height;
 			const obstacleLeft = Math.min(obstacle.previousX ?? obstacle.x, obstacle.x);
 			const obstacleRight = Math.max(obstacle.previousX ?? obstacle.x, obstacle.x) + obstacle.width;
 			const overlapsHorizontally = obstacleLeft < playerX + 12 && obstacleRight > playerX - 12;
+			if (!overlapsHorizontally) return false;
+			if (obstacle.type === "low") return !isDucking;
+			const obstacleTop = groundY - obstacle.height;
+			const obstacleBottom = obstacleTop + obstacle.height;
 			const overlapsVertically = playerTop < obstacleBottom && playerBottom > obstacleTop;
-			return overlapsHorizontally && overlapsVertically;
+			return overlapsVertically;
 		});
 		if (collided) beginCapture();
 		updateHud();
@@ -709,21 +824,28 @@
 		toggle.setAttribute("aria-expanded", "false");
 		toggle.setAttribute("aria-label", "Oyun oyna");
 		startScreen.hidden = false;
-		message.textContent = "Engellerden zıpla, peşindeki kalpleri geride bırak! 💕";
+		message.textContent = "Engellerden kaç, balon ve yem topla; bombayla kalpleri arkana at! 💕";
 		startButton.innerHTML = 'Aşktan kaç <span aria-hidden="true">→</span>';
 		game.distance = 0;
 		game.jumpHeight = 0;
 		game.jumpVelocity = 0;
+		keyboardDuck = false;
+		pointerDuckId = null;
+		game.ducking = false;
 		game.captured = false;
 		game.captureProgress = 0;
 		game.obstacles = [];
 		game.balloons = [];
 		game.bombs = [];
+		game.foods = [];
+		game.flungGirls = [];
 		game.effects = [];
 		game.bombCount = 0;
+		game.foodPoints = 0;
 		resetGirls();
 		game.nextGirlAt = 50;
 		game.nextBalloonAt = 60;
+		game.nextFoodAt = 100;
 		updateHud();
 		toggle.focus();
 	}
@@ -736,27 +858,24 @@
 	startButton.addEventListener("click", startGame);
 	if (bombButton) bombButton.addEventListener("click", throwBomb);
 
-	let pointerStart = null;
 	canvas.addEventListener("pointerdown", (event) => {
-		if (!game.running) return;
-		pointerStart = { x: event.clientX, y: event.clientY };
+		if (!game.running || event.button > 0) return;
+		event.preventDefault();
 		canvas.setPointerCapture?.(event.pointerId);
-	});
-	canvas.addEventListener("pointerup", (event) => {
-		if (!pointerStart || !game.running) return;
-		const deltaX = event.clientX - pointerStart.x;
-		const deltaY = event.clientY - pointerStart.y;
-		pointerStart = null;
-		if (deltaY > 24) {
-			setDucking(true);
-			window.setTimeout(() => setDucking(false), 550);
-		} else if (deltaX < -28) {
-			throwBomb();
-		} else {
+		const bounds = canvas.getBoundingClientRect();
+		if (event.clientX < bounds.left + bounds.width / 2) {
 			jump();
+			return;
 		}
+		setPointerDucking(event.pointerId);
 	});
-	canvas.addEventListener("pointercancel", () => { pointerStart = null; });
+	const releasePointerDuck = (event) => {
+		if (pointerDuckId !== event.pointerId) return;
+		setPointerDucking(null);
+	};
+	canvas.addEventListener("pointerup", releasePointerDuck);
+	canvas.addEventListener("pointercancel", releasePointerDuck);
+	canvas.addEventListener("lostpointercapture", releasePointerDuck);
 	window.addEventListener("keydown", (event) => {
 		if (!game.open) return;
 		if (event.key === "Escape") {
@@ -777,7 +896,10 @@
 	window.addEventListener("keyup", (event) => {
 		if (event.key === "ArrowDown" || event.code === "KeyS") setDucking(false);
 	});
-	window.addEventListener("blur", () => setDucking(false));
+	window.addEventListener("blur", () => {
+		setDucking(false);
+		setPointerDucking(null);
+	});
 
 	const stageElement = canvas.closest(".runner-stage");
 	if (stageElement && "ResizeObserver" in window) {
